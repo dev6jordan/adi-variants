@@ -1,0 +1,75 @@
+<div class="modal-header">
+  <div class="modal-title">
+      <h3 class="modal-title">Search Lookup</h3>
+  </div>
+</div>
+
+<div class="modal-body">
+  <div ng-show="hasError" class="alert alert-danger" role="alert" align="center">
+    {{errorMsg}}
+  </div>
+  <div ng-show="hasSuccess" class="alert alert-success" role="alert" align="center">
+    {{successMsg}}
+  </div>
+  <ul>
+    <li>
+      <label for="">Search Name</label>
+        <input name="VARIANT" type="text" size="30" maxlength="100" ng-model="model.name" ng-change="searchList()" class="search-field-modal">
+    </li>
+    <li>
+      <label for="">Description</label>
+      <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" ng-change="searchList()" class="search-field-modal">
+    </li>
+    <li class="variant-make-public">
+      <label for="">Only My Searches</label>
+      <label for="PUBLIC_Y">
+        <input id="PUBLIC_Y" type="radio" ng-model="onlyMine" ng-value="true" ng-change="searchList()">Yes</label>
+      <label for="PUBLIC_N">
+        <input id="PUBLIC_N" type="radio" ng-model="onlyMine" ng-value="false" ng-change="searchList()">No
+      </label>
+    </li>
+    <li ng-if="!onlyMine">
+      <label for="">User</label>
+      <input name="USER" value="" size="30" maxlength="50" type="text" ng-model="model.userID" ng-change="searchList()" class="search-field-modal">
+    </li>
+  </ul>
+</div>
+
+<div class="modal-footer">
+  <div style="padding-top:15px" class="desktop">
+    <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
+  </div>
+  <div class="mobile">
+    <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+  </div>
+
+  <table border="1" ng-hide="model.filteredList.length===0">
+    <thead>
+      <tr>
+        <th>Search Name</th>
+        <th>Description</th>
+        <th>Created By</th>
+        <th>Last Modified</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="variant in model.filteredList | limitTo:model.pageSize:model.beginFrom">
+          <td>{{variant.variantName}}</td>
+          <td>{{variant.shortDescription}}</td>
+          <td>{{variant.createdBy}}</td>
+          <td>{{variant.lastModified}}</td>
+          <td>
+              <button ng-click="selectVariant(variant)" class="bottombuttons">select</button>
+              <button ng-click="deleteVariant(variant)" class="bottombuttons delete-button">delete</button>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <div class="desktop">
+    <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
+  </div>
+    <div class="mobile">
+    <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+  </div>
+</div>

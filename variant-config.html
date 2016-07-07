@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <div class="modal-title">
+      <h3 class="modal-title">Save New Search</h3>
+  </div>
+</div>
+
+<div class="modal-body">
+  <adi-progress-bar ng-show="showProgress"></adi-progress-bar>
+  <div ng-show="hasError" class="alert alert-danger" role="alert" align="center">
+    Unable to save search at this time.
+  </div>
+  <ul>
+    <li>
+      <label for="">Search Name</label>
+        <input name="VARIANT" type="text" size="30" maxlength="100" ng-model="model.name" ng-change="searchList()" class="search-field-modal">
+    </li>
+    <li>
+      <label for="">Description</label>
+      <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" ng-change="searchList()" class="search-field-modal">
+    </li>
+    <li class="variant-make-public">
+      <label for="">Make Public</label>
+      <label for="PUBLIC_Y">
+        <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="true">Yes</label>
+      <label for="PUBLIC_N">
+        <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="false">No
+      </label>
+    </li>
+  </ul>
+</div>
+
+<div class="modal-footer">
+  <div style="padding-top:15px">
+    <button ng-click="saveVariant()" class="bottombuttons" ng-class="{'disabled-save': (model.name === '' || model.description === '')}" ng-disabled="model.name === '' || model.description === ''">Save</button>
+    <button ng-click="close()" class="bottombuttons">Close</button>
+  </div>
+</div>

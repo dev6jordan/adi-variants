@@ -1,0 +1,113 @@
+.variant-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.variant-icon {
+    padding-top: 6px;
+    margin-left: 10px;
+    font-size: 1.3em;
+}
+
+.variant-icon-disabled {
+    color: rgba(51,122,183,0.5);
+}
+
+.variant-icon-disabled:hover {
+    cursor: default;
+}
+
+.variant-make-public input {
+    margin-right: 5px;
+}
+
+.disabled-save {
+    background: rgba(0,0,0,0.5)!important;
+    cursor: default!important;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+.modal-header {
+    padding: 10px;
+    text-align: center;
+}
+
+.modal-header h3 {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.modal-footer {
+    text-align: center;
+}
+
+.modal-footer table {
+    width: 99%;
+    margin: 15px auto 15px auto;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    font-size: 0.85em;
+}
+
+.modal-footer table thead {
+    background-color: #595959;
+    color: #fff;
+}
+
+.modal-footer table thead th {
+    padding: 7px;
+}
+
+.modal-footer table thead th:last-child,
+.modal-footer table tbody td:last-child {
+    text-align: center;
+}
+
+.modal-footer table tbody td {
+    text-align: left;
+    background-color: #FFF;
+    padding: 7px;
+}
+
+.modal-footer table tbody td:first-child {
+    width: 100px;
+}
+
+.modal-footer table tbody td:nth-child(3) {
+    width: 140px;
+}
+
+.modal-footer table tbody td:last-child {
+    width: 25px;
+}
+
+.modal-footer table td button {
+    margin: 0;
+}
+
+.mobile-break {
+    display: none;
+}
+
+.loading {
+    text-align: center;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin-left: -27px;
+    z-index: 5000;
+}
+
+.delete-button {
+    margin-top: 5px!important;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
+    .search-field-modal {
+        width: 50%;
+    }
+}
