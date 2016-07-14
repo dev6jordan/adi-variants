@@ -4,7 +4,7 @@ angular.module('adidas.variants', []);
 angular.module('adidas.variants')
   .directive('variants', function () {
     return {
-      templateUrl: 'bower_components/adidas.variants/variants.html',
+      templateUrl: 'variants.html',
       restrict: 'E',
       scope: {
         params: '=',
@@ -63,7 +63,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            templateUrl: 'bower_components/adidas.variants/variant-config.html',
+            templateUrl: 'variant-config.html',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -94,7 +94,7 @@ angular.module('adidas.variants')
 
         $scope.loadVariants = function () {
           var loadInstance = $modal.open({
-            templateUrl: 'bower_components/adidas.variants/variant-search.html',
+            templateUrl: 'variant-search.html',
             controller: 'VariantCtrl',
             size: 'md',
             resolve: {
@@ -232,7 +232,7 @@ angular.module('adidas.variants')
     angular.module('adidas.variants')
       .directive('adiProgressBar', function (appVer) {
         return {
-          templateUrl: 'bower_components/adidas.variants/variant-progress-bar.html'
+          templateUrl: 'variant-progress-bar.html'
           // restrict: 'E'
         };
     });
