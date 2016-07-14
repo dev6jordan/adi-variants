@@ -4,7 +4,7 @@ angular.module('adidas.variants', []);
 angular.module('adidas.variants')
   .directive('variants', function () {
     return {
-      template: '<div class=variant-wrapper><a><span class="glyphicon variant-icon glyphicon-floppy-disk"ng-click=save() ng-class="{'variant-icon-disabled':isSaveDisabled()}"ng-disabled=isSaveDisabled()></span></a> <a><span class="glyphicon variant-icon glyphicon-file"ng-click=loadVariants()></span></a></div>',
+      template: '<div class=variant-wrapper><a><span class="glyphicon variant-icon glyphicon-floppy-disk"ng-click=save() ng-class="{"variant-icon-disabled":isSaveDisabled()}"ng-disabled=isSaveDisabled()></span></a> <a><span class="glyphicon variant-icon glyphicon-file"ng-click=loadVariants()></span></a></div>',
       restrict: 'E',
       scope: {
         params: '=',
