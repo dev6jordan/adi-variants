@@ -17,6 +17,25 @@ angular.module('adidas.variants')
         $scope.variant = [];
         $scope.showProgress = false;
 
+        $scope.init = function () {
+
+          VariantService.getVariantList($scope.appName)
+          .then(function success (response) {
+            var res = eval(response.data);
+            for (var i=0; i<res.length;i++) {
+              if (res[i].isDefault === 'Y') {
+                $scope.variant = res[i];
+                $scope.params = res[i].params;
+                $timeout(function () {
+                  $scope.$apply();
+                });
+              }
+            }
+          }, function err () {
+            console.log('The system is busy and could not retrieve the list of searches. Please try again later.');
+          });
+        };
+
         $scope.save = function () {
           if ($scope.saveDisabled) {
             return;
@@ -26,7 +45,7 @@ angular.module('adidas.variants')
             var confirmOverwrite = (confirm('Would you like to overwrite the current search?'));
             if (confirmOverwrite) {
               $scope.mainLoader = true;
-              VariantService.updateVariant($scope.userid, $scope.variant)
+              VariantService.updateVariant($scope.appName, $scope.variant.id, $scope.variant)
                 .then(function success (response) {
                   $rootScope.$emit('variantSuccessAlert', 'Search has been saved successfully.');
                   $scope.mainLoader = false;
@@ -110,6 +129,8 @@ angular.module('adidas.variants')
             }
           }, true);
         });
+
+        $scope.init();
       }
     };
   });
@@ -139,7 +160,7 @@ angular.module('adidas.variants')
       $scope.init = function () {
         $scope.showProgress = true;
 
-        VariantService.getVariantList()
+        VariantService.getVariantList(appName)
           .then(function success (response) {
             $scope.results = eval(response.data);
             $scope.searchList();
@@ -182,7 +203,7 @@ angular.module('adidas.variants')
         $scope.showProgress = true;
         var confirmation = confirm('Are you sure you want to delete this search?');
         if (confirmation) {
-          VariantService.deleteVariant(userid, variant)
+          VariantService.deleteVariant(appName, variant)
             .then(function success (response) {
               $scope.results = response;
               $scope.hasSuccess = true;
@@ -217,11 +238,12 @@ angular.module('adidas.variants')
     });
 
     angular.module('adidas.variants')
-      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader) {
+      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName) {
         $scope.model = {
           name: '',
           description: '',
-          isPublic: false,
+          isPublic: 'N',
+          isDefault: 'N'
         };
         $scope.showProgress = false;
 
@@ -230,7 +252,7 @@ angular.module('adidas.variants')
         $scope.saveVariant = function () {
           $scope.hasError = false;
           $scope.showProgress = true;
-          VariantService.saveNewVariant($scope.model)
+          VariantService.saveNewVariant(appName, $scope.model)
             .then(function success (response) {
               $scope.showProgress = false;
               $modalInstance.close(response);
@@ -246,18 +268,20 @@ angular.module('adidas.variants')
       });
 
   angular.module('adidas.variants')
-    .factory('VariantService', function ($q, $http, $location) {
+    .factory('VariantService', function ($q, $http, $location, $window) {
       var localData = 'bower_components/adidas.variants/variants.txt';
-      var serviceUrl = '/appname=Portal_SAP&prgname=AJS_Variant_Lookup';
+      var serviceUrl = '/appname=Portal_SAP&prgname=NG_VARIANT_SERVICE';
       var absURL = $location.absUrl();
       var localSaveSuccess = 'bower_components/adidas.variants/save_variant.txt';
 
       return {
-        getVariantList: function () {
+        getVariantList: function (appName) {
           var deferred = $q.defer();
+          // var country = ($window.opener?$window.opener.top.GLBCOUNTRY:'CA');
           var url = localData;
+          var params = '&SESIONID='+($window.opener?($window.opener.top.GLBSID||top.GLBSID):'')+'&MODE=R&APPNAME='+appName;
           if (absURL.indexOf(':9000') === -1) {
-            url = serviceUrl;
+            url = serviceUrl+params;
           }
           $http.get(url)
             .then(function success (response) {
@@ -267,10 +291,10 @@ angular.module('adidas.variants')
             });
           return deferred.promise;
         },
-        updateVariant: function (id, newParams) {
+        updateVariant: function (appName, variantID, variant) {
           var deferred = $q.defer();
-          var params = '&id=' + id + '&params=' + newParams;
-
+          var variantParams = '';
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.shortDescription + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(serviceUrl, params.toString())
               .then(function success (response) {
@@ -286,10 +310,9 @@ angular.module('adidas.variants')
           }
           return deferred.promise;
         },
-        saveNewVariant: function (newParams) {
+        saveNewVariant: function (appName, variant) {
           var deferred = $q.defer();
-          var params = '&params=' + newParams;
-
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.shortDescription + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(serviceUrl, params.toString())
               .then(function success (response) {
@@ -309,9 +332,9 @@ angular.module('adidas.variants')
           }
           return deferred.promise;
         },
-        deleteVariant: function (id, variant) {
+        deleteVariant: function (appName, variant) {
           var deferred = $q.defer();
-          var params = '&params=' + variant;
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variant.id + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.shortDescription + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
 
           if (absURL.indexOf(':9000') === -1) {
             $http.post(serviceUrl, params.toString())

@@ -21,9 +21,17 @@
     <li class="variant-make-public">
       <label for="">Make Public</label>
       <label for="PUBLIC_Y">
-        <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="true">Yes</label>
+        <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="'Y'">Yes</label>
       <label for="PUBLIC_N">
-        <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="false">No
+        <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="'N'">No
+      </label>
+    </li>
+    <li class="variant-make-public">
+      <label for="">Set as Default</label>
+      <label for="DEFAULT_Y">
+        <input id="DEFAULT_Y" type="radio" ng-model="model.isDefault" ng-value="'Y'">Yes</label>
+      <label for="DEFAULT_N">
+        <input id="DEFAULT_N" type="radio" ng-model="model.isDefault" ng-value="'N'">No
       </label>
     </li>
   </ul>
