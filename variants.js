@@ -4,7 +4,7 @@ angular.module('adidas.variants', []);
 angular.module('adidas.variants')
   .directive('variants', function () {
     return {
-      templateUrl: 'bower_components/adidas.variants/variants.html',
+      template: '<div class=variant-wrapper><a><span class="glyphicon variant-icon glyphicon-floppy-disk"ng-click=save() ng-class="{\'variant-icon-disabled\':isSaveDisabled()}"ng-disabled=isSaveDisabled()></span></a> <a><span class="glyphicon variant-icon glyphicon-file"ng-click=loadVariants()></span></a></div>',
       restrict: 'E',
       scope: {
         params: '=',
@@ -63,7 +63,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            templateUrl: 'bower_components/adidas.variants/variant-config.html',
+            template: '<div class=modal-header><div class=modal-title><h3 class=modal-title>Save New Search</h3></div></div><div class=modal-body><adi-progress-bar ng-show=showProgress></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT ng-change=searchList() size=30><li><label for="">Description</label><input ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION ng-change=searchList() size=30><li class=variant-make-public><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio>No</label><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \' || model.description === \')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -94,7 +94,7 @@ angular.module('adidas.variants')
 
         $scope.loadVariants = function () {
           var loadInstance = $modal.open({
-            templateUrl: 'bower_components/adidas.variants/variant-search.html',
+            template: '<div class=modal-header><div class=modal-title><h3 class=modal-title>Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><ul><li><label for="">Search Name</label><input ng-change=searchList() ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT size=30><li><label for="">Description</label><input ng-change=searchList() ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION size=30><li class=variant-make-public><label for="">Only My Searches</label><label for=PUBLIC_Y><input ng-change=searchList() ng-model=onlyMine id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-change=searchList() ng-model=onlyMine id=PUBLIC_N ng-value=false type=radio>No</label><li ng-if=!onlyMine><label for="">User</label><input ng-change=searchList() ng-model=model.userID class=search-field-modal maxlength=50 name=USER size=30></ul></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 ng-hide="model.filteredList.length===0"><thead><tr><th>Search Name<th>Description<th>Created By<th>Last Modified<th>Select<tbody><tr ng-repeat="variant in model.filteredList | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.shortDescription}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><button class=bottombuttons ng-click=selectVariant(variant)>select</button> <button class="bottombuttons delete-button"ng-click=deleteVariant(variant)>delete</button></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=shipPageChanged() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=shipPageChanged() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
             controller: 'VariantCtrl',
             size: 'md',
             resolve: {
@@ -232,7 +232,7 @@ angular.module('adidas.variants')
     angular.module('adidas.variants')
       .directive('adiProgressBar', function (appVer) {
         return {
-          templateUrl: 'bower_components/adidas.variants/variant-progress-bar.html'
+          template: '<div class=loading><img src=images/loading.gif></div>'
           // restrict: 'E'
         };
     });
