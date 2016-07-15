@@ -56,20 +56,22 @@
     <tbody>
         <tr ng-repeat="variant in model.filteredList | limitTo:model.pageSize:model.beginFrom">
           <td>{{variant.variantName}}</td>
-          <td>{{variant.shortDescription}}</td>
+          <td>{{variant.description}}</td>
           <td>{{variant.createdBy}}</td>
           <td>{{variant.lastModified}}</td>
           <td>
-              <button ng-click="selectVariant(variant)" class="bottombuttons">select</button>
-              <button ng-click="deleteVariant(variant)" class="bottombuttons delete-button">delete</button>
+              <button ng-click="selectVariant(variant)" class="bottombuttons">Select</button>
+              <button ng-click="makeDefault(variant)" class="bottombuttons delete-button">Default</button>
+              <button ng-click="deleteVariant(variant)" class="bottombuttons delete-button">Delete</button>
           </td>
         </tr>
     </tbody>
   </table>
   <div class="desktop">
-    <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
+    <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
   </div>
-    <div class="mobile">
-    <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+  <div class="mobile">
+    <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
   </div>
+
 </div>
