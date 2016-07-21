@@ -106,6 +106,85 @@
     margin-top: 5px!important;
 }
 
+.push-right {
+    margin-left: 1em;
+}
+
+.onlyMySearches input {
+    margin-left: 0.5em;
+    margin-right: 0.2em;
+}
+
+.breakLine label {
+    /*margin-left: 2em!important;*/
+}
+
+.leftvariantform input {
+    width: 10em!important;
+    margin-left: 0.5em;
+}
+
+.rightvariantform #onlyMineUser {
+    width: 10em!important;
+    margin-left: 0.5em;
+}
+
+.variantResultList tbody tr td:first-child {
+    width: 10em!important;
+    max-width: 10em!important;
+}
+
+.variantResultList tbody tr td:nth-child(2) {
+    width: 20em!important;
+    max-width: 20em!important;
+}
+
+.variantResultList tbody tr td:nth-child(3) {
+    width: 10em!important;
+    max-width: 10em!important;
+}
+
+.variantResultList tbody tr td:nth-child(4) {
+    width: 10em!important;
+    max-width: 10em!important;
+}
+
+.variantResultList tbody tr td:last-child {
+    width: auto!important;
+    max-width: auto!important;
+}
+
+.isDefaultRadio {
+    margin-right: 0.5em!important;
+}
+
+.deleteVariantButton {
+    font-size: 1.5em;
+    padding-top: 0.15em;
+}
+
+.sort-link {
+    color: white;
+}
+
+.sort-link:hover {
+    color: white!important;
+    text-decoration: none;
+}
+
+.sort-link:focus {
+    color: white!important;
+    text-decoration: none;
+}
+
+.sortorder:after {
+  content: '\25b2';
+}
+
+.sortorder.reverse:after {
+  content: '\25bc';
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
     .search-field-modal {
         width: 50%;

@@ -4,7 +4,7 @@ angular.module('adidas.variants', []);
 angular.module('adidas.variants')
   .directive('variants', function () {
     return {
-      template: '<div class=variant-wrapper><a><span class="glyphicon variant-icon glyphicon-floppy-disk"ng-click=save() ng-class="{\'variant-icon-disabled\':isSaveDisabled()}"ng-disabled=isSaveDisabled()></span></a> <a><span class="glyphicon variant-icon glyphicon-file"ng-click=loadVariants()></span></a></div>',
+      template: '<div class=variant-wrapper><a><span class="glyphicon variant-icon glyphicon-floppy-disk"ng-click=save() ng-class="{\'variant-icon-disabled\':isSaveDisabled()}"ng-disabled=isSaveDisabled()></span></a> <a><span class="glyphicon variant-icon glyphicon-search"ng-click=loadVariants()></span></a></div>',
       restrict: 'E',
       scope: {
         params: '=',
@@ -16,35 +16,23 @@ angular.module('adidas.variants')
         $scope.saveDisabled = true;
         $scope.variant = [];
         $scope.showProgress = false;
+        $scope.allVariants = [];
+        $scope.defaultVariant = '';
 
         $scope.init = function () {
 
           $timeout(function () {
-            VariantService.getVariantList($scope.appName)
-            .then(function success (response) {
-              if (response.data !== '') {
+
+            VariantService.getDefaultVariant($scope.appName)
+              .then(function success (response) {
                 var res = eval(response.data);
-                var id = '';
-                if ($window.opener) {
-                  id = $window.opener.top.GLBUSRID;
-                } else {
-                  id = top.GLBUSRID;
+                if (res !== []) {
+                  $scope.defaultVariant = res[0].id;
+                  $scope.params = res[0].params;
                 }
-                console.log('ID: ', id);
-                for (var i=0; i<res.length;i++) {
-                  console.log('ID FROM RES: ', res[i].createdBy);
-                  if (res[i].isDefault === 'Y' && id === res[i].createdBy) {
-                    $scope.variant = res[i];
-                    $scope.params = res[i].params;
-                    $timeout(function () {
-                      $scope.$apply();
-                    });
-                  }
-                }
-              }
-            }, function err () {
-              console.log('The system is busy and could not retrieve the list of searches. Please try again later.');
-            });
+              }, function err () {
+                console.log('The system is busy and could not retrieve the default search. Please try again later.');
+              });
           });
 
         };
@@ -76,7 +64,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            template: '<div class=modal-header><div class=modal-title><h3 class=modal-title>Save New Search</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT ng-change=searchList() size=30><li><label for="">Description</label><input ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION ng-change=searchList() size=30><li class=variant-make-public><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio>No</label><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \' || model.description === \')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
+            template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Save New Search</h3></div></div><div class=modal-body><adi-progress-bar ng-show=showProgress></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT ng-change=searchList() size=30><li><label for="">Description</label><input ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION ng-change=searchList() size=30><li class=variant-make-public><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio>No</label><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \'\' || model.description === \'\')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -106,29 +94,46 @@ angular.module('adidas.variants')
         };
 
         $scope.loadVariants = function () {
-          var loadInstance = $modal.open({
-            template: '<div class=modal-header><div class=modal-title><h3 class=modal-title>Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><ul><li><label for="">Search Name</label><input ng-change=searchList() ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT size=30><li><label for="">Description</label><input ng-change=searchList() ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION size=30><li class=variant-make-public><label for="">Only My Searches</label><label for=PUBLIC_Y><input ng-change=searchList() ng-model=onlyMine id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-change=searchList() ng-model=onlyMine id=PUBLIC_N ng-value=false type=radio>No</label><li ng-if=!onlyMine><label for="">User</label><input ng-change=searchList() ng-model=model.userID class=search-field-modal maxlength=50 name=USER size=30></ul></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 ng-hide="model.filteredList.length===0"><thead><tr><th>Search Name<th>Description<th>Created By<th>Last Modified<th>Select<tbody><tr ng-repeat="variant in model.filteredList | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.description}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button> <button class="bottombuttons delete-button"ng-click=makeDefault(variant)>Default</button> <button class="bottombuttons delete-button"ng-click=deleteVariant(variant)>Delete</button></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
-            controller: 'VariantCtrl',
-            size: 'md',
-            resolve: {
-              params: function () {
-                return $scope.params;
-              },
-              userid: function () {
-                return $scope.userid;
-              },
-              appName: function () {
-                return $scope.appName;
-              }
-            }
-          });
+          $scope.mainLoader = true;
+          VariantService.getVariantList($scope.appName)
+              .then(function success (response) {
+                $scope.allVariants = eval(response.data);
+                $scope.mainLoader = false;
+                console.log('DEFAULT VARIANT: ', $scope.defaultVariant);
+                var loadInstance = $modal.open({
+                  template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><div class="desktop col-md-6 shiptocontainer"><form class="modal-form leftvariantform shiptoform"><div><label for="">Search Name</label><input ng-model=model.name ng-change=searchList() maxlength=100 name=VARIANT size=30></div><div><label for="">Description</label><input ng-model=model.description ng-change=searchList() maxlength=100 name=DESCRIPTION size=30></div></form></div><div class="desktop col-md-6 namecontainer"><form class="modal-form nameform rightvariantform"><div class=onlyMySearches><label for=""class=breakLine>Only My Searches</label><label for=PUBLIC_Y class=push-right><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_N ng-value=false type=radio>No</label></div><div ng-if=!onlyMine><label for="">Created By</label><input ng-model=model.userID ng-change=searchList() id=onlyMineUser maxlength=50 name=USER size=30></div></form></div></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 class=variantResultList ng-hide="model.filteredList.length===0"><thead><tr><th><a class=sort-link href=""ng-click="order(\'variantName\')">Search Name</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantName\'"></span><th><a class=sort-link href=""ng-click="order(\'variantDsc\')">Description</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantDsc\'"></span><th><a class=sort-link href=""ng-click="order(\'createdBy\')">Created By</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'createdBy\'"></span><th><a class=sort-link href=""ng-click="order(\'lastModified\')">Last Modified</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'lastModified\'"></span><th>Default<th>Select<th>Remove<tbody><tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.variantDsc}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><input ng-model=isDefault id={{variant.id}}Default type=radio class=isDefaultRadio name={{variant.id}}Default ng-checked=checkIsDefault(variant.id) ng-click=makeDefault(variant)><label for={{variant.id}}Default>Set default</label><td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button><td><i class="deleteVariantButton glyphicon glyphicon-remove"ng-click=deleteVariant(variant) ng-if="variant.createdBy === userid"></i></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
+                  controller: 'VariantCtrl',
+                  size: 'lg',
+                  resolve: {
+                    variants: function () {
+                      return $scope.allVariants;
+                    },
+                    defaultVariant: function () {
+                      return $scope.defaultVariant;
+                    },
+                    params: function () {
+                      return $scope.params;
+                    },
+                    userid: function () {
+                      return $scope.userid;
+                    },
+                    appName: function () {
+                      return $scope.appName;
+                    }
+                  }
+                });
 
-          loadInstance.result.then(function (variant) {
-            $scope.params = variant.params;
-            $scope.variant = variant;
-          }, function err () {
-            // Modal closed via backdrop click
-          });
+                loadInstance.result.then(function (variant) {
+                  if (variant !== undefined) {
+                    $scope.params = variant.params;
+                    $scope.variant = variant;
+                  }
+                }, function err () {
+                  // Modal closed via backdrop click
+                });
+              }, function err () {
+                console.log('The system is busy and could not retrieve the list of searches. Please try again later.');
+              });
         };
 
         $scope.isSaveDisabled = function () {
@@ -149,7 +154,7 @@ angular.module('adidas.variants')
   });
 
   angular.module('adidas.variants')
-    .controller('VariantCtrl', function ($scope, params, userid, appName, VariantService, $window, $filter, $modalInstance) {
+    .controller('VariantCtrl', function ($scope, params, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout) {
       $scope.params = params;
       $scope.userid = userid;
       $scope.appName = appName;
@@ -169,21 +174,38 @@ angular.module('adidas.variants')
         beginFrom: 0,
         filteredList: []
       };
+      $scope.isDefault = '';
+      $scope.predicate = 'lastModified';
+      $scope.reverse = false;
+      $scope.resultsCopy = '';
 
       $scope.init = function () {
         $scope.showProgress = true;
+        $scope.results = variants;
+        $scope.isDefault = defaultVariant;
+        console.log('DEFAULT VARIANT: ', defaultVariant);
+        $scope.searchList();
 
-        VariantService.getVariantList(appName)
-          .then(function success (response) {
-            $scope.results = eval(response.data);
-            for (var i=0; i<$scope.results.length; i++) {
-              $scope.results[i].lastModified = $scope.date2String($scope.results[i].lastModified);
-            };
-            $scope.searchList();
-          }, function err (response) {
-            $scope.hasError = true;
-            $scope.errorMsg = response.msg;
-          });
+        // VariantService.getVariantList(appName)
+        //   .then(function success (response) {
+        //     $scope.results = eval(response.data);
+        //     $scope.resultsCopy = eval(response.data);
+        //     for (var i=0; i<$scope.results.length; i++) {
+        //       $scope.results[i].lastModified = $scope.date2String($scope.results[i].lastModified);
+        //       if ($scope.results[i].isDefault === 'Y') {
+        //         $scope.isDefault = $scope.results[i].id;
+        //       }
+        //     };
+        //     $scope.searchList();
+        //     // $scope.order('name');
+        //   }, function err (response) {
+        //     $scope.hasError = true;
+        //     $scope.errorMsg = response.msg;
+        //     $timeout(function () {
+        //       $scope.hasError = false;
+        //       $scope.errorMsg = '';
+        //     }, 3000);
+        //   });
       };
 
       $scope.pageChange = function () {
@@ -203,7 +225,7 @@ angular.module('adidas.variants')
         }
 
         $scope.model.filteredList = $filter('filter')($scope.results, function (item) {
-            if(item.variantName.toUpperCase().indexOf(nameUpper) !== -1 && item.createdBy.toUpperCase().indexOf(userIdUpper) !== -1){
+            if(item.variantName.toUpperCase().indexOf(nameUpper) !== -1 && item.createdBy.toUpperCase().indexOf(userIdUpper) !== -1 && item.variantDsc.toUpperCase().indexOf(descriptionUpper) !== -1){
                 return true;
             } else {
                 return false;
@@ -211,11 +233,25 @@ angular.module('adidas.variants')
         });
       };
 
+      $scope.order = function (predicate) {
+        var results = $scope.model.filteredList;
+
+        $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+        $scope.predicate = predicate;
+        $scope.model.currentPage = 1;
+        $scope.model.beginFrom = 0;
+        var orderBy = $filter('orderBy');
+        $scope.results = orderBy(results, 'createdBy', $scope.reverse);
+
+        $scope.searchList();
+      };
+
       $scope.selectVariant = function (variant) {
         $scope.close(variant);
       };
 
       $scope.makeDefault = function (variant) {
+        $scope.isDefault = '';
         $scope.showProgress = true;
         VariantService.updateVariant(appName, variant.id, variant, 'Y')
           .then(function success (response) {
@@ -223,12 +259,26 @@ angular.module('adidas.variants')
             $scope.showProgress = false;
             $window.scrollTo(0,0);
             $scope.successMsg = 'Search has been set as your default.';
+            $scope.isDefault = variant.id;
+            $timeout(function () {
+              $scope.hasSuccess = false;
+              $scope.successMsg = '';
+            }, 3000);
           }, function err (response) {
+            $scope.isDefault = variant.id;
             $scope.showProgress = false;
             $scope.hasError = true;
             $window.scrollTo(0,0);
             $scope.errorMsg = 'Search could not be set as your default.';
           });
+      };
+
+      $scope.checkIsDefault = function (id) {
+        if (id === $scope.isDefault) {
+          return true;
+        } else {
+          return false;
+        }
       };
 
       $scope.deleteVariant = function (variant) {
@@ -244,15 +294,22 @@ angular.module('adidas.variants')
                   $scope.hasSuccess = true;
                   $scope.successMsg = 'Search has been successfully deleted.';
                   $scope.showProgress = false;
+                  $timeout(function () {
+                    $scope.successMsg = '';
+                    $scope.hasSuccess = false;
+                  }, 3000);
                 })
             }, function err (response) {
               $scope.hasError = true;
               $scope.errorMsg = response.msg;
               $scope.showProgress = false;
+              $timeout(function () {
+                $scope.errorMsg = '';
+                $scope.hasError = false;
+              }, 3000);
             });
         }
       };
-
 
       $scope.date2String = function (date) {
         if(date===undefined || date==='' || date === '0'){
@@ -263,7 +320,7 @@ angular.module('adidas.variants')
 
       $scope.close = function (params) {
         if (params === undefined) {
-          $modalInstance.close($scope.params);
+          $modalInstance.close();
         } else {
           $modalInstance.close(params);
         }
@@ -296,6 +353,7 @@ angular.module('adidas.variants')
         $scope.saveVariant = function () {
           $scope.hasError = false;
           $scope.showProgress = true;
+
           VariantService.saveNewVariant(appName, $scope.model, params)
             .then(function success (response) {
               $scope.showProgress = false;
@@ -322,20 +380,47 @@ angular.module('adidas.variants')
       return {
         getVariantList: function (appName) {
           var deferred = $q.defer();
-          // var country = ($window.opener?$window.opener.top.GLBCOUNTRY:'CA');
           var url = localData;
           var params = '&SESIONID='+($window.opener?($window.opener.top.GLBSID||top.GLBSID):'')+'&MODE=R&APPNAME='+appName;
           if (absURL.indexOf(':9000') === -1) {
             url = serviceUrl+params;
+            $http.post(MAGIC_URL, url)
+              .then(function success (response) {
+                deferred.resolve(response);
+              }, function err (response) {
+                var res = eval(response.data);
+                deferred.reject(res[0]);
+              });
+            return deferred.promise;
+          } else {
+            $http.get(localData)
+              .then(function success (response) {
+                deferred.resolve(response);
+              });
+              return deferred.promise;
           }
-          $http.post(MAGIC_URL, url)
-            .then(function success (response) {
-              deferred.resolve(response);
-            }, function err (response) {
-              var res = eval(response.data);
-              deferred.reject(res[0]);
-            });
-          return deferred.promise;
+        },
+        getDefaultVariant: function (appName) {
+          var deferred = $q.defer();
+          var url = localData;
+          var params = '&SESIONID='+($window.opener?($window.opener.top.GLBSID||top.GLBSID):'')+'&MODE=F&APPNAME='+appName;
+          if (absURL.indexOf(':9000') === -1) {
+            url = serviceUrl+params;
+            $http.post(MAGIC_URL, url)
+              .then(function success (response) {
+                deferred.resolve(response);
+              }, function err (response) {
+                var res = eval(response.data);
+                deferred.reject(res[0]);
+              });
+            return deferred.promise;
+          } else {
+            $http.get(localData)
+              .then(function success (response) {
+                deferred.resolve(response);
+              });
+              return deferred.promise;
+          }
         },
         updateVariant: function (appName, variantID, variant, def) {
           var deferred = $q.defer();
@@ -344,7 +429,7 @@ angular.module('adidas.variants')
           if (def === '') {
             isDefault = variant.isDefault;
           }
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.shortDescription + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {

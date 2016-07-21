@@ -1,4 +1,5 @@
 <div class="modal-header">
+  <div ng-click="close()" class="close">X</div>
   <div class="modal-title">
       <h3 class="modal-title">Save New Search</h3>
   </div>
@@ -39,7 +40,7 @@
 
 <div class="modal-footer">
   <div style="padding-top:15px">
-    <button ng-click="saveVariant()" class="bottombuttons" ng-class="{'disabled-save': (model.name === ' || model.description === ')}" ng-disabled="model.name === ' || model.description === '">Save</button>
+    <button ng-click="saveVariant()" class="bottombuttons" ng-class="{'disabled-save': (model.name === '' || model.description === '')}" ng-disabled="model.name === ' || model.description === '">Save</button>
     <button ng-click="close()" class="bottombuttons">Close</button>
   </div>
 </div>
