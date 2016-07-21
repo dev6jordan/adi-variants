@@ -18,11 +18,12 @@ angular.module('adidas.variants')
         $scope.showProgress = false;
         $scope.allVariants = [];
         $scope.defaultVariant = '';
+        $scope.initialParams = '';
 
         $scope.init = function () {
+          $scope.initialParams = angular.copy($scope.params);
 
           $timeout(function () {
-
             VariantService.getDefaultVariant($scope.appName)
               .then(function success (response) {
                 var res = eval(response.data);
@@ -34,7 +35,6 @@ angular.module('adidas.variants')
                 console.log('The system is busy and could not retrieve the default search. Please try again later.');
               });
           });
-
         };
 
         $scope.save = function () {
@@ -99,7 +99,6 @@ angular.module('adidas.variants')
               .then(function success (response) {
                 $scope.allVariants = eval(response.data);
                 $scope.mainLoader = false;
-                console.log('DEFAULT VARIANT: ', $scope.defaultVariant);
                 var loadInstance = $modal.open({
                   template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><div class="desktop col-md-6 shiptocontainer"><form class="modal-form leftvariantform shiptoform"><div><label for="">Search Name</label><input ng-model=model.name ng-change=searchList() maxlength=100 name=VARIANT size=30></div><div><label for="">Description</label><input ng-model=model.description ng-change=searchList() maxlength=100 name=DESCRIPTION size=30></div></form></div><div class="desktop col-md-6 namecontainer"><form class="modal-form nameform rightvariantform"><div class=onlyMySearches><label for=""class=breakLine>Only My Searches</label><label for=PUBLIC_Y class=push-right><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_N ng-value=false type=radio>No</label></div><div ng-if=!onlyMine><label for="">Created By</label><input ng-model=model.userID ng-change=searchList() id=onlyMineUser maxlength=50 name=USER size=30></div></form></div></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 class=variantResultList ng-hide="model.filteredList.length===0"><thead><tr><th><a class=sort-link href=""ng-click="order(\'variantName\')">Search Name</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantName\'"></span><th><a class=sort-link href=""ng-click="order(\'variantDsc\')">Description</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantDsc\'"></span><th><a class=sort-link href=""ng-click="order(\'createdBy\')">Created By</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'createdBy\'"></span><th><a class=sort-link href=""ng-click="order(\'lastModified\')">Last Modified</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'lastModified\'"></span><th>Default<th>Select<th>Remove<tbody><tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.variantDsc}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><input ng-model=isDefault id={{variant.id}}Default type=radio class=isDefaultRadio name={{variant.id}}Default ng-checked=checkIsDefault(variant.id) ng-click=makeDefault(variant)><label for={{variant.id}}Default>Set default</label><td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button><td><i class="deleteVariantButton glyphicon glyphicon-remove"ng-click=deleteVariant(variant) ng-if="variant.createdBy === userid"></i></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
                   controller: 'VariantCtrl',
@@ -113,6 +112,9 @@ angular.module('adidas.variants')
                     },
                     params: function () {
                       return $scope.params;
+                    },
+                    defaultParams: function () {
+                      return $scope.initialParams;
                     },
                     userid: function () {
                       return $scope.userid;
@@ -154,7 +156,7 @@ angular.module('adidas.variants')
   });
 
   angular.module('adidas.variants')
-    .controller('VariantCtrl', function ($scope, params, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout) {
+    .controller('VariantCtrl', function ($scope, params, defaultParams, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout) {
       $scope.params = params;
       $scope.userid = userid;
       $scope.appName = appName;
@@ -183,7 +185,6 @@ angular.module('adidas.variants')
         $scope.showProgress = true;
         $scope.results = variants;
         $scope.isDefault = defaultVariant;
-        console.log('DEFAULT VARIANT: ', defaultVariant);
         $scope.searchList();
 
         // VariantService.getVariantList(appName)
@@ -247,7 +248,9 @@ angular.module('adidas.variants')
       };
 
       $scope.selectVariant = function (variant) {
-        $scope.close(variant);
+        var variantCopy = variant;
+        variantCopy.soldToList = defaultParams.soldToList;
+        $scope.close(variantCopy);
       };
 
       $scope.makeDefault = function (variant) {
@@ -353,8 +356,11 @@ angular.module('adidas.variants')
         $scope.saveVariant = function () {
           $scope.hasError = false;
           $scope.showProgress = true;
+          var paramsCopy = params;
 
-          VariantService.saveNewVariant(appName, $scope.model, params)
+          paramsCopy.soldToList = '';
+
+          VariantService.saveNewVariant(appName, $scope.model, paramsCopy)
             .then(function success (response) {
               $scope.showProgress = false;
               $modalInstance.close(response);

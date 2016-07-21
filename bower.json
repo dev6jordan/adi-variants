@@ -4,7 +4,10 @@
     "Jordan McRae <jordanm@newyyz.com>"
   ],
   "description": "Search (variant) management directive for use across adidas applications",
-  "main": ["variants.js", "variants.css"],
+  "main": [
+    "variants.js",
+    "variants.css"
+  ],
   "moduleType": [],
   "keywords": [
     "variant",
@@ -25,6 +28,7 @@
   ],
   "dependencies": {
     "angular": "^1.3.0",
-    "bootstrap": "^3.2.0"
+    "bootstrap": "^3.2.0",
+    "underscore": "~1.8.3"
   }
 }
