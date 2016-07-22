@@ -28,8 +28,12 @@ angular.module('adidas.variants')
               .then(function success (response) {
                 var res = eval(response.data);
                 if (res !== []) {
+                  _.each(res, function (value, key) {
+                      _.each(value.params, function (resVal, resKey) {
+                        $scope.params[resKey] = resVal;
+                      });
+                  });
                   $scope.defaultVariant = res[0].id;
-                  $scope.params = res[0].params;
                 }
               }, function err () {
                 console.log('The system is busy and could not retrieve the default search. Please try again later.');
@@ -186,27 +190,6 @@ angular.module('adidas.variants')
         $scope.results = variants;
         $scope.isDefault = defaultVariant;
         $scope.searchList();
-
-        // VariantService.getVariantList(appName)
-        //   .then(function success (response) {
-        //     $scope.results = eval(response.data);
-        //     $scope.resultsCopy = eval(response.data);
-        //     for (var i=0; i<$scope.results.length; i++) {
-        //       $scope.results[i].lastModified = $scope.date2String($scope.results[i].lastModified);
-        //       if ($scope.results[i].isDefault === 'Y') {
-        //         $scope.isDefault = $scope.results[i].id;
-        //       }
-        //     };
-        //     $scope.searchList();
-        //     // $scope.order('name');
-        //   }, function err (response) {
-        //     $scope.hasError = true;
-        //     $scope.errorMsg = response.msg;
-        //     $timeout(function () {
-        //       $scope.hasError = false;
-        //       $scope.errorMsg = '';
-        //     }, 3000);
-        //   });
       };
 
       $scope.pageChange = function () {
