@@ -9,11 +9,11 @@ Variant management directive for use across adidas applications.
 
 - - - -
 ###Directive use example
-`<variants params="model.searchParams" userid="model.userID" app-name="'AI'" main-loader="model.showProgress"></variants>`        
+`<variants params="model.searchParams" userid="model.userID" app-name="'AI'" main-loader="model.showProgress" sessionid="sessionID" userType="model.userType"></variants>`        
 
 **1) params** -> List of application / report params that are to be updated and saved via variant system    
 **2) userid** -> User ID of current logged in user    
-**3) app-name** -> Shorthand of current application or report...    
+**3) app-name** -> Shorthand of current application or report...
 
 Value  | App Name
 ------------- | -------------
@@ -22,7 +22,8 @@ Value  | App Name
 'ST'          | Shipment Tracking
 'OT'          | Order Tracking
 'B2B'         | B2B Orders    
-**4) main-loader** -> Loading spinner boolean for main application
+**5) usertype** -> User type of current logged in user    
+**6) main-loader** -> Loading spinner boolean for main application
 - - - -
 
 ###Functionality
