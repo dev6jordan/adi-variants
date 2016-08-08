@@ -14,7 +14,6 @@ Variant management directive for use across adidas applications.
 **1) params** -> List of application / report params that are to be updated and saved via variant system    
 **2) userid** -> User ID of current logged in user    
 **3) app-name** -> Shorthand of current application or report...
-**4) user-type** -> User type of current logged in user
 
 Value  | App Name
 ------------- | -------------
@@ -23,7 +22,8 @@ Value  | App Name
 'ST'          | Shipment Tracking
 'OT'          | Order Tracking
 'B2B'         | B2B Orders    
-**4) main-loader** -> Loading spinner boolean for main application
+**5) user-type** -> User type of current logged in user    
+**6) main-loader** -> Loading spinner boolean for main application
 - - - -
 
 ###Functionality
