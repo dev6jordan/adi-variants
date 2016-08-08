@@ -185,6 +185,19 @@
   content: '\25bc';
 }
 
+.userid-field {
+    font-weight: bold!important;
+    padding-left: 1em!important;
+}
+
+.userid-input {
+    width: 7em!important;
+}
+
+.match-input-width {
+    width: 20.35em;
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
     .search-field-modal {
         width: 50%;

@@ -10,7 +10,8 @@ angular.module('adidas.variants')
         params: '=',
         userid: '=',
         appName: '=',
-        mainLoader: '='
+        mainLoader: '=',
+        usertype: '='
       },
       controller: function ($scope, $modal, $timeout, VariantService, $rootScope, $window) {
         $scope.saveDisabled = true;
@@ -68,7 +69,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Save New Search</h3></div></div><div class=modal-body><adi-progress-bar ng-show=showProgress></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class=search-field-modal maxlength=100 name=VARIANT ng-change=searchList() size=30><li><label for="">Description</label><input ng-model=model.description class=search-field-modal maxlength=100 name=DESCRIPTION ng-change=searchList() size=30><li class=variant-make-public><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio>No</label><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \'\' || model.description === \'\')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
+            template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Save Search to Favorites</h3></div></div><div class=modal-body><adi-progress-bar ng-show=showProgress></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class="search-field-modal match-input-width"maxlength=30 name=VARIANT size=30><li><label for="">Description</label><input ng-model=model.description class="search-field-modal match-input-width"maxlength=100 name=DESCRIPTION size=30><li class=variant-make-public ng-if="userType !== \'C\'"><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio ng-click="model.userid = \'\'">No</label><label for=""class=userid-field ng-show="model.isPublic === \'Y\'">User ID (Optional)</label><input ng-model=model.userid class="search-field-modal userid-input"maxlength=10 name=USERID size=30 ng-show="model.isPublic === \'Y\'"><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \'\' || model.description === \'\')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -83,6 +84,9 @@ angular.module('adidas.variants')
               },
               mainLoader: function () {
                 return $scope.mainLoader;
+              },
+              userType: function () {
+                return $scope.usertype;
               }
             }
           });
@@ -104,7 +108,7 @@ angular.module('adidas.variants')
                 $scope.allVariants = eval(response.data);
                 $scope.mainLoader = false;
                 var loadInstance = $modal.open({
-                  template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><div class="desktop col-md-6 shiptocontainer"><form class="modal-form leftvariantform shiptoform"><div><label for="">Search Name</label><input ng-model=model.name ng-change=searchList() maxlength=100 name=VARIANT size=30></div><div><label for="">Description</label><input ng-model=model.description ng-change=searchList() maxlength=100 name=DESCRIPTION size=30></div></form></div><div class="desktop col-md-6 namecontainer"><form class="modal-form nameform rightvariantform"><div class=onlyMySearches><label for=""class=breakLine>Only My Searches</label><label for=PUBLIC_Y class=push-right><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_N ng-value=false type=radio>No</label></div><div ng-if=!onlyMine><label for="">Created By</label><input ng-model=model.userID ng-change=searchList() id=onlyMineUser maxlength=50 name=USER size=30></div></form></div></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 class=variantResultList ng-hide="model.filteredList.length===0"><thead><tr><th><a class=sort-link href=""ng-click="order(\'variantName\')">Search Name</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantName\'"></span><th><a class=sort-link href=""ng-click="order(\'variantDsc\')">Description</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantDsc\'"></span><th><a class=sort-link href=""ng-click="order(\'createdBy\')">Created By</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'createdBy\'"></span><th><a class=sort-link href=""ng-click="order(\'lastModified\')">Last Modified</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'lastModified\'"></span><th>Default<th>Select<th>Remove<tbody><tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.variantDsc}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><input ng-model=isDefault id={{variant.id}}Default type=radio class=isDefaultRadio name={{variant.id}}Default ng-checked=checkIsDefault(variant.id) ng-click=makeDefault(variant)><label for={{variant.id}}Default>Set default</label><td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button><td><i class="deleteVariantButton glyphicon glyphicon-remove"ng-click=deleteVariant(variant) ng-if="variant.createdBy === userid"></i></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
+                  template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Favorite Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><div class="desktop col-md-6 shiptocontainer"><form class="modal-form leftvariantform shiptoform"><div><label for="">Search Name</label><input ng-model=model.name ng-change=searchList() maxlength=100 name=VARIANT size=30></div><div><label for="">Description</label><input ng-model=model.description ng-change=searchList() maxlength=100 name=DESCRIPTION size=30></div></form></div><div class="desktop col-md-6 namecontainer"><form class="modal-form nameform rightvariantform"><div class=onlyMySearches><label for=""class=breakLine>Only My Searches</label><label for=PUBLIC_Y class=push-right><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_N ng-value=false type=radio>No</label></div><div ng-if=!onlyMine><label for="">Created By</label><input ng-model=model.userID ng-change=searchList() id=onlyMineUser maxlength=50 name=USER size=30></div></form></div></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 class=variantResultList ng-hide="model.filteredList.length===0"><thead><tr><th><a class=sort-link href=""ng-click="order(\'variantName\')">Search Name</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantName\'"></span><th><a class=sort-link href=""ng-click="order(\'variantDsc\')">Description</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantDsc\'"></span><th><a class=sort-link href=""ng-click="order(\'createdBy\')">Created By</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'createdBy\'"></span><th><a class=sort-link href=""ng-click="order(\'lastModified\')">Last Modified</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'lastModified\'"></span><th>Default<th>Select<th>Remove<tbody><tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.variantDsc}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><input ng-model=isDefault id={{variant.id}}Default type=radio class=isDefaultRadio name={{variant.id}}Default ng-checked=checkIsDefault(variant.id) ng-click=makeDefault(variant)><label for={{variant.id}}Default>Set default</label><td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button><td><i class="deleteVariantButton glyphicon glyphicon-remove"ng-click=deleteVariant(variant) ng-if="variant.createdBy === userid"></i></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
                   controller: 'VariantCtrl',
                   size: 'lg',
                   resolve: {
@@ -227,7 +231,7 @@ angular.module('adidas.variants')
         var orderBy = $filter('orderBy');
         $scope.results = orderBy(results, 'createdBy', $scope.reverse);
 
-        $scope.searchList();
+        $scope.searchList();  
       };
 
       $scope.selectVariant = function (variant) {
@@ -325,14 +329,16 @@ angular.module('adidas.variants')
     });
 
     angular.module('adidas.variants')
-      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName, params) {
+      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName, params, userType) {
         $scope.model = {
           name: '',
           description: '',
           isPublic: 'N',
-          isDefault: 'N'
+          isDefault: 'N',
+          userId: ''
         };
         $scope.showProgress = false;
+        $scope.userType = userType;
 
         $scope.hasError = false;
 
@@ -342,6 +348,10 @@ angular.module('adidas.variants')
           var paramsCopy = params;
 
           paramsCopy.soldToList = '';
+          if (userType === 'C') {
+            $scope.isPublic = 'N';
+            $scope.model.userId = '';
+          }
 
           VariantService.saveNewVariant(appName, $scope.model, paramsCopy)
             .then(function success (response) {
@@ -418,7 +428,7 @@ angular.module('adidas.variants')
           if (def === '') {
             isDefault = variant.isDefault;
           }
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&SHAREUSERID=' + variant.shareUserId + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
@@ -437,7 +447,7 @@ angular.module('adidas.variants')
         },
         saveNewVariant: function (appName, variant, params) {
           var deferred = $q.defer();
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&VARIANTPARAMS=' + JSON.stringify(params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&SHAREUSERID=' + variant.userId + '&VARIANTPARAMS=' + JSON.stringify(params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
