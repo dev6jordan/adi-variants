@@ -22,7 +22,7 @@ Value  | App Name
 'ST'          | Shipment Tracking
 'OT'          | Order Tracking
 'B2B'         | B2B Orders    
-**5) user-type** -> User type of current logged in user    
+**5) usertype** -> User type of current logged in user    
 **6) main-loader** -> Loading spinner boolean for main application
 - - - -
 
