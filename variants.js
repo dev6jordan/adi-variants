@@ -428,7 +428,7 @@ angular.module('adidas.variants')
           if (def === '') {
             isDefault = variant.isDefault;
           }
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&SHAREUSERID=' + variant.shareUserId + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&SHAREUSERID=' + variant.shareUsere + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
@@ -447,7 +447,7 @@ angular.module('adidas.variants')
         },
         saveNewVariant: function (appName, variant, params) {
           var deferred = $q.defer();
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&SHAREUSERID=' + variant.userId + '&VARIANTPARAMS=' + JSON.stringify(params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&SHAREUSERID=' + variant.userid + '&VARIANTPARAMS=' + JSON.stringify(params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
