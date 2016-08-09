@@ -381,6 +381,7 @@ angular.module('adidas.variants')
           $scope.hasError = false;
           $scope.showProgress = true;
           var paramsCopy = params;
+          delete paramsCopy.startDate;
 
           paramsCopy.soldToList = '';
           if (userType === 'C') {
