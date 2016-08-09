@@ -218,7 +218,7 @@ angular.module('adidas.variants')
       };
       $scope.isDefault = '';
       $scope.predicate = 'lastModified';
-      $scope.reverse = false;
+      $scope.reverse = true;
       $scope.resultsCopy = '';
 
       $scope.init = function () {
