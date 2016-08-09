@@ -11,7 +11,8 @@ angular.module('adidas.variants')
         userid: '=',
         appName: '=',
         mainLoader: '=',
-        usertype: '='
+        usertype: '=',
+        loaddefault: '='
       },
       controller: function ($scope, $modal, $timeout, VariantService, $rootScope, $window) {
         $scope.saveDisabled = true;
@@ -25,13 +26,39 @@ angular.module('adidas.variants')
           $scope.initialParams = angular.copy($scope.params);
 
           $timeout(function () {
-            VariantService.getDefaultVariant($scope.appName)
+            if ($scope.loaddefault) {
+              VariantService.getDefaultVariant($scope.appName)
+                .then(function success (response) {
+                  var res = eval(response.data);
+                  if (res !== []) {
+                    _.each(res, function (value, key) {
+                        _.each(value.params, function (resVal, resKey) {
+                          if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo') {
+                            $scope.params[resKey] = resVal;
+                          }
+                        });
+                    });
+                    $scope.defaultVariant = res[0].id;
+                  }
+                }, function err () {
+                  console.log('The system is busy and could not retrieve the default search. Please try again later.');
+                });
+            }
+            });
+        };
+
+        $scope.getDefault = function () {
+          VariantService.getDefaultVariant($scope.appName)
               .then(function success (response) {
                 var res = eval(response.data);
                 if (res !== []) {
                   _.each(res, function (value, key) {
                       _.each(value.params, function (resVal, resKey) {
-                        $scope.params[resKey] = resVal;
+                        if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo') {
+                          $scope.params[resKey] = resVal;
+                        } else {
+                          $scope.params[resKey] = new Date(resVal);/
+                        }
                       });
                   });
                   $scope.defaultVariant = res[0].id;
@@ -39,7 +66,6 @@ angular.module('adidas.variants')
               }, function err () {
                 console.log('The system is busy and could not retrieve the default search. Please try again later.');
               });
-          });
         };
 
         $scope.save = function () {
@@ -156,6 +182,12 @@ angular.module('adidas.variants')
               $scope.saveDisabled = false;
             }
           }, true);
+
+          $scope.$watch(function () {return $scope.loaddefault}, function (newV, oldV) {
+            if (newV === true) {
+              $scope.getDefault();
+            }
+          });
         });
 
         $scope.init();
