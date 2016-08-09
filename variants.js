@@ -243,6 +243,9 @@ angular.module('adidas.variants')
           $scope.model.userID = '';
           userIdUpper = userid.toUpperCase();
         }
+        for (var i=0; i<$scope.results.length; i++) {
+          $scope.results[i].lastModified = $scope.date2String($scope.results[i].lastModified);
+        }
 
         $scope.model.filteredList = $filter('filter')($scope.results, function (item) {
             if(item.variantName.toUpperCase().indexOf(nameUpper) !== -1 && item.createdBy.toUpperCase().indexOf(userIdUpper) !== -1 && item.variantDsc.toUpperCase().indexOf(descriptionUpper) !== -1){
