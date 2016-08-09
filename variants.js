@@ -30,10 +30,10 @@ angular.module('adidas.variants')
               VariantService.getDefaultVariant($scope.appName)
                 .then(function success (response) {
                   var res = eval(response.data);
-                  if (res !== []) {
+                  if (res.length > 0) {
                     _.each(res, function (value, key) {
                         _.each(value.params, function (resVal, resKey) {
-                          if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo') {
+                          if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
                             $scope.params[resKey] = resVal;
                           }
                         });
@@ -51,10 +51,10 @@ angular.module('adidas.variants')
           VariantService.getDefaultVariant($scope.appName)
               .then(function success (response) {
                 var res = eval(response.data);
-                if (res !== []) {
+                if (res.length > 0) {
                   _.each(res, function (value, key) {
                       _.each(value.params, function (resVal, resKey) {
-                        if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo') {
+                        if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
                           $scope.params[resKey] = resVal;
                         } else {
                           $scope.params[resKey] = new Date(resVal);
