@@ -56,8 +56,6 @@ angular.module('adidas.variants')
                       _.each(value.params, function (resVal, resKey) {
                         if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
                           $scope.params[resKey] = resVal;
-                        } else {
-                          $scope.params[resKey] = new Date(resVal);
                         }
                       });
                   });
