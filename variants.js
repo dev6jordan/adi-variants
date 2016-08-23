@@ -98,7 +98,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Save Search to Favorites</h3></div></div><div class=modal-body><adi-progress-bar ng-show=showProgress></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class="search-field-modal match-input-width"maxlength=30 name=VARIANT size=30><li><label for="">Description</label><input ng-model=model.description class="search-field-modal match-input-width"maxlength=100 name=DESCRIPTION size=30><li class=variant-make-public ng-if="userType !== \'C\'"><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio ng-click="model.userid = \'\'">No</label><label for=""class=userid-field ng-show="model.isPublic === \'Y\'">User ID (Optional)</label><input ng-model=model.userid class="search-field-modal userid-input"maxlength=10 name=USERID size=30 ng-show="model.isPublic === \'Y\'"><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \'\' || model.description === \'\')}"ng-disabled="model.name === \' || model.description === \'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
+            template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Save Search to Favorites</h3> </div></div><div class="modal-body"> <adi-progress-bar ng-show="false"></adi-progress-bar> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center"> Unable to save search at this time. </div><ul> <li> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="30" ng-model="model.name" class="search-field-modal match-input-width"> </li><li> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" class="search-field-modal match-input-width"> </li><li class="variant-make-public" ng-if="userType !==\'C\'"> <label for="">Make Public</label> <label for="PUBLIC_Y"> <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="\'Y\'">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="\'N\'" ng-click="model.userid=\'\'">No </label> <label for="" class="userid-field" ng-show="model.isPublic===\'Y\'">User ID (Optional)</label> <input name="USERID" type="text" size="30" maxlength="10" ng-model="model.userid" class="search-field-modal userid-input" ng-show="model.isPublic===\'Y\'"> </li><li class="variant-make-public"> <label for="">Set as Default</label> <label for="DEFAULT_Y"> <input id="DEFAULT_Y" type="radio" ng-model="model.isDefault" ng-value="\'Y\'">Yes</label> <label for="DEFAULT_N"> <input id="DEFAULT_N" type="radio" ng-model="model.isDefault" ng-value="\'N\'">No </label> </li></ul></div><div class="modal-footer"> <div style="padding-top:15px"> <button ng-click="saveVariant()" class="bottombuttons" ng-class="{\'disabled-save\': (model.name===\'\' || model.description===\'\')}" ng-disabled="model.name===\' || model.description===\'">Save</button> <button ng-click="close()" class="bottombuttons">Close</button> </div></div>',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -382,6 +382,7 @@ angular.module('adidas.variants')
 
         $scope.saveVariant = function () {
           $scope.hasError = false;
+          $scope.mainLoader = true;
           $scope.showProgress = true;
           var paramsCopy = params;
           if (appName === 'IA' && paramsCopy.startDate !== undefined) {
@@ -396,9 +397,11 @@ angular.module('adidas.variants')
 
           VariantService.saveNewVariant(appName, $scope.model, paramsCopy)
             .then(function success (response) {
+              $scope.mainLoader = false;
               $scope.showProgress = false;
               $modalInstance.close(response);
             }, function err (response) {
+              $scope.mainLoader = false;
               $scope.showProgress = false;
               $scope.hasError = true;
             });
