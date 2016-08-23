@@ -34,11 +34,16 @@ angular.module('adidas.variants')
                     _.each(res, function (value, key) {
                         _.each(value.params, function (resVal, resKey) {
                           if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
-                            $scope.params[resKey] = resVal;
+                            if (resKey !== 'brand' && $scope.appName === 'OT') {
+                              $scope.params[resKey] = resVal;
+                            }
                           }
                         });
                     });
                     $scope.defaultVariant = res[0].id;
+                    $timeout(function() {
+                      $scope.$apply();
+                    });
                   }
                 }, function err () {
                   console.log('The system is busy and could not retrieve the default search. Please try again later.');
