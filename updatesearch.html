@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <div ng-click="close()" class="close">X</div>
+    <div class="modal-title">
+        <h3 class="modal-title">Update Saved Search Settings</h3> </div>
+</div>
+<div class="modal-body">
+    <adi-progress-bar ng-show="false"></adi-progress-bar>
+    <div ng-show="hasError" class="alert alert-danger" role="alert" align="center"> Unable to save search at this time. </div>
+    <ul>
+        <li>
+            <label for="">Search Name</label>
+            <input name="VARIANT" type="text" size="30" maxlength="30" ng-model="model.name" class="search-field-modal match-input-width"> </li>
+        <li>
+            <label for="">Description</label>
+            <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" class="search-field-modal match-input-width"> </li>
+        <li class="variant-make-public" ng-if="userType !=='C'">
+            <label for="">Share With Accounts</label>
+            <label for="PUBLIC_Y">
+                <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="'Y'">Yes</label>
+            <label for="PUBLIC_N">
+                <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="'N'" ng-click="model.userid=''">No </label>
+            <label for="" class="userid-field" ng-show="model.isPublic==='Y'"><img ng-hide="userType==='C'" src="images/search-icon.png" height="20" width="20" alt="" ng-click="openUserList()">Users (Optional)</label>
+            <textarea name="USERID" type="text" size="30" ng-model="model.userId" class="search-field-modal userid-input" ng-show="model.isPublic==='Y'" ng-blur="formatAccounts()"></textarea>
+            <div class="col-xs-12">
+	          <p ng-if="model.isPublic === 'Y'" style="font-weight: bold">You may select up to 100 accounts. If you do not select any accounts in the list, the search will be shared with all of your accounts.</p>
+	        </div>
+        </li>
+        <li class="variant-make-public">
+            <label for="">Set as Default</label>
+            <label for="DEFAULT_Y">
+                <input id="DEFAULT_Y" type="radio" ng-model="model.isDefault" ng-value="'Y'">Yes</label>
+            <label for="DEFAULT_N">
+                <input id="DEFAULT_N" type="radio" ng-model="model.isDefault" ng-value="'N'">No </label>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <div style="padding-top:15px">
+        <button ng-click="saveVariant()" class="bottombuttons" ng-class="{'disabled-save': (model.name==='' || model.description==='')}" ng-disabled="model.name==='' || model.description===''">Save</button>
+        <button ng-click="close()" class="bottombuttons">Close</button>
+    </div>
+</div>

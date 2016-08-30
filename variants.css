@@ -10,6 +10,9 @@
     font-size: 1.3em;
 }
 
+.user-list {
+    z-index: 99999999999;
+}
 .variant-icon-disabled {
     color: rgba(51,122,183,0.5);
 }
@@ -191,9 +194,16 @@
 }
 
 .userid-input {
-    width: 7em!important;
+    width: 15em!important;
 }
 
+.top-wrapper {
+    clear: both;
+}
+
+.done-button {
+    margin-bottom: 10px!important;
+}
 .match-input-width {
     width: 20.35em;
 }

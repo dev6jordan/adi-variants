@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <div ng-click="cancel()" class="close">X</div>
+    <h3 class="modal-title">Share With Accounts</h3></div>
+<div class="modal-body" stop-event="touchend">
+    <progress-bar ng-show="model.showProgress"></progress-bar>
+    <div class="col-md-6 shiptocontainer desktop">
+        <form class="modal-form shiptoform">
+            <div>
+                <label>Ship To #</label>
+                <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div>
+            <div>
+                <label>Sold To #</label>
+                <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div>
+        </form>
+    </div>
+    <div class="col-md-6 namecontainer desktop">
+        <form class="modal-form nameform">
+            <div>
+                <label class="nameinput">Name</label>
+                <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div>
+            <div>
+                <label class="cityinput">City</label>
+                <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div>
+            <div>
+                <label class="zipinput">Zip Code</label>
+                <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div>
+        </form>
+        <br>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="buttonwrapper"> </div>
+    <div style="margin-top:20px" class="desktop top-wrapper">
+        <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
+        <div class="col-xs-12">
+            <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button>
+        </div>
+    </div>
+    <div class="mobile">
+        <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+    </div>
+    <table border="1" ng-hide="model.shipToListParams.length===0">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name / City</th>
+                <th>Add / Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom">
+                <td>{{lineCust.shipTo}}</td>
+                <td>{{lineCust.name}}
+                    <br>{{lineCust.city}}</td>
+                <td>
+                    <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button>
+                    <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="col-xs-12 text-center" style="margin-bottom: 10px">
+        <button ng-click="cancel()" class="bottombuttons text-center">Done</button>
+    </div>
+    <div style="padding-top:15px" class="desktop">
+        <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
+    </div>
+    <div class="mobile">
+        <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+    </div>
+</div>

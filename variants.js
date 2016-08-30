@@ -12,7 +12,8 @@ angular.module('adidas.variants')
         appName: '=',
         mainLoader: '=',
         usertype: '=',
-        loaddefault: '='
+        loaddefault: '=',
+        brand: '='
       },
       controller: function ($scope, $modal, $timeout, VariantService, $rootScope, $window) {
         $scope.saveDisabled = true;
@@ -98,7 +99,7 @@ angular.module('adidas.variants')
 
         $scope.openVariantConfig = function () {
           var loadInstance = $modal.open({
-            template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Save Search to Favorites</h3></div></div><div class=modal-body><adi-progress-bar ng-show=false></adi-progress-bar><div class="alert alert-danger"align=center ng-show=hasError role=alert>Unable to save search at this time.</div><ul><li><label for="">Search Name</label><input ng-model=model.name class="search-field-modal match-input-width"maxlength=30 name=VARIANT size=30><li><label for="">Description</label><input ng-model=model.description class="search-field-modal match-input-width"maxlength=100 name=DESCRIPTION size=30><li class=variant-make-public ng-if="userType !== \'C\'"><label for="">Make Public</label><label for=PUBLIC_Y><input ng-model=model.isPublic id=PUBLIC_Y ng-value="\'Y\'"type=radio>Yes</label><label for=PUBLIC_N><input ng-model=model.isPublic id=PUBLIC_N ng-value="\'N\'"type=radio ng-click="model.userid = \'\'">No</label><label for=""class=userid-field ng-show="model.isPublic === \'Y\'">User ID (Optional)</label><input ng-model=model.userid class="search-field-modal userid-input"maxlength=10 name=USERID size=30 ng-show="model.isPublic === \'Y\'"><li class=variant-make-public><label for="">Set as Default</label><label for=DEFAULT_Y><input ng-model=model.isDefault id=DEFAULT_Y ng-value="\'Y\'"type=radio>Yes</label><label for=DEFAULT_N><input ng-model=model.isDefault id=DEFAULT_N ng-value="\'N\'"type=radio>No</label></ul></div><div class=modal-footer><div style=padding-top:15px><button class=bottombuttons ng-click=saveVariant() ng-class="{\'disabled-save\': (model.name === \'\' || model.description === \'\')}"ng-disabled="model.name === \'\' || model.description === \'\'">Save</button> <button class=bottombuttons ng-click=close()>Close</button></div></div>',
+            template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Save Search to Favorites</h3> </div></div><div class="modal-body"> <adi-progress-bar ng-show="false"></adi-progress-bar> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center"> Unable to save search at this time. </div><ul> <li> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="30" ng-model="model.name" class="search-field-modal match-input-width"> </li><li> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" class="search-field-modal match-input-width"> </li><li class="variant-make-public" ng-if="userType !==\'C\'"> <label for="">Share With Accounts</label> <label for="PUBLIC_Y"> <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="\'Y\'">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="\'N\'" ng-click="model.userid=\'\'">No </label> <label for="" class="userid-field" ng-show="model.isPublic===\'Y\'"><img ng-hide="userType===\'C\'" src="images/search-icon.png" height="20" width="20" alt="" ng-click="openUserList()">Users (Optional)</label> <textarea name="USERID" type="text" size="30" maxlength="10" ng-model="model.userId" class="search-field-modal userid-input" ng-show="model.isPublic===\'Y\'" ng-disabled="true"></textarea> <div class="col-xs-12"> <p ng-if="model.isPublic===\'Y\'" style="font-weight: bold">You may select up to 100 accounts. If you do not select any accounts in the list, the search will be shared with all of your accounts.</p></div></li><li class="variant-make-public"> <label for="">Set as Default</label> <label for="DEFAULT_Y"> <input id="DEFAULT_Y" type="radio" ng-model="model.isDefault" ng-value="\'Y\'">Yes</label> <label for="DEFAULT_N"> <input id="DEFAULT_N" type="radio" ng-model="model.isDefault" ng-value="\'N\'">No </label> </li></ul></div><div class="modal-footer"> <div style="padding-top:15px"> <button ng-click="saveVariant()" class="bottombuttons" ng-class="{\'disabled-save\': (model.name===\'\' || model.description===\'\')}" ng-disabled="model.name===\'\' || model.description===\'\'">Save</button> <button ng-click="close()" class="bottombuttons">Close</button> </div></div>',
             controller: 'VariantConfigCtrl',
             size: 'md',
             resolve: {
@@ -116,6 +117,9 @@ angular.module('adidas.variants')
               },
               userType: function () {
                 return $scope.usertype;
+              },
+              brand: function () {
+                return $scope.brand;
               }
             }
           });
@@ -140,7 +144,7 @@ angular.module('adidas.variants')
                 }
                 $scope.mainLoader = false;
                 var loadInstance = $modal.open({
-                  template: '<div class=modal-header><div class=close ng-click=close()>X</div><div class=modal-title><h3 class=modal-title>Favorite Search Lookup</h3></div></div><div class=modal-body><div class="alert alert-danger"align=center ng-show=hasError role=alert>{{errorMsg}}</div><div class="alert alert-success"align=center ng-show=hasSuccess role=alert>{{successMsg}}</div><div class="desktop col-md-6 shiptocontainer"><form class="modal-form leftvariantform shiptoform"><div><label for="">Search Name</label><input ng-model=model.name ng-change=searchList() maxlength=100 name=VARIANT size=30></div><div><label for="">Description</label><input ng-model=model.description ng-change=searchList() maxlength=100 name=DESCRIPTION size=30></div></form></div><div class="desktop col-md-6 namecontainer"><form class="modal-form nameform rightvariantform"><div class=onlyMySearches><label for=""class=breakLine>Only My Searches</label><label for=PUBLIC_Y class=push-right><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_Y ng-value=true type=radio>Yes</label><label for=PUBLIC_N><input ng-model=onlyMine ng-change=searchList() id=PUBLIC_N ng-value=false type=radio>No</label></div><div ng-if=!onlyMine><label for="">Created By</label><input ng-model=model.userID ng-change=searchList() id=onlyMineUser maxlength=50 name=USER size=30></div></form></div></div><div class=modal-footer><div class=desktop style=padding-top:15px><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div><table border=1 class=variantResultList ng-hide="model.filteredList.length===0"><thead><tr><th><a class=sort-link href=""ng-click="order(\'variantName\')">Search Name</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantName\'"></span><th><a class=sort-link href=""ng-click="order(\'variantDsc\')">Description</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'variantDsc\'"></span><th><a class=sort-link href=""ng-click="order(\'createdBy\')">Created By</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'createdBy\'"></span><th><a class=sort-link href=""ng-click="order(\'lastModified\')">Last Modified</a> <span class=sortorder ng-class={reverse:reverse} ng-show="predicate === \'lastModified\'"></span><th>Default<th>Select<th>Remove<tbody><tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"><td>{{variant.variantName}}<td>{{variant.variantDsc}}<td>{{variant.createdBy}}<td>{{variant.lastModified}}<td><input ng-model=isDefault id={{variant.id}}Default type=radio class=isDefaultRadio name={{variant.id}}Default ng-checked=checkIsDefault(variant.id) ng-click=makeDefault(variant)><label for={{variant.id}}Default>Set default</label><td><button class=bottombuttons ng-click=selectVariant(variant)>Select</button><td><i class="deleteVariantButton glyphicon glyphicon-remove"ng-click=deleteVariant(variant) ng-if="variant.createdBy === userid"></i></table><div class=desktop><pagination boundary-links=true class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length></pagination></div><div class=mobile><pagination boundary-links=false class=pagination-group items-per-page=model.pageSize max-size=model.pagesToShow ng-change=pageChange() ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"ng-model=model.currentPage total-items=model.filteredList.length next-text=› previous-text=‹></pagination></div></div>',
+                  template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Favorite Search Lookup</h3> </div></div><div class="modal-body"> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center">{{errorMsg}}</div><div ng-show="hasSuccess" class="alert alert-success" role="alert" align="center">{{successMsg}}</div><div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform leftvariantform"> <div> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="100" ng-model="model.name" ng-change="searchList()"> </div><div> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform rightvariantform"> <div class="onlyMySearches"> <label for="" class="breakLine">Only My Searches</label> <label for="PUBLIC_Y" class="push-right"> <input id="PUBLIC_Y" type="radio" ng-model="onlyMine" ng-value="true" ng-change="searchList()">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="onlyMine" ng-value="false" ng-change="searchList()">No </label> </div><div ng-if="!onlyMine"> <label for="">Created By</label> <input name="USER" id="onlyMineUser"value="" size="30" maxlength="50" type="text" ng-model="model.userID" ng-change="searchList()"> </div></form> </div></div><div class="modal-footer"> <div style="padding-top:15px" class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.filteredList.length===0" class="variantResultList"> <thead> <tr> <th> <a href="" ng-click="order(\'variantName\')" class="sort-link">Search Name</a> <span class="sortorder" ng-show="predicate===\'variantName\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'variantDsc\')" class="sort-link">Description</a> <span class="sortorder" ng-show="predicate===\'variantDsc\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'createdBy\')" class="sort-link">Created By</a> <span class="sortorder" ng-show="predicate===\'createdBy\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'lastModified\')" class="sort-link">Last Modified</a> <span class="sortorder" ng-show="predicate===\'lastModified\'" ng-class="{reverse:reverse}"></span> </th> <th>Default</th> <th>Action</th> </tr></thead> <tbody> <tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"> <td>{{variant.variantName}}</td><td>{{variant.variantDsc}}</td><td>{{variant.createdBy}}</td><td>{{variant.lastModified}}</td><td><input name="{{variant.id}}Default" id="{{variant.id}}Default" ng-model="isDefault" type="radio" ng-checked="checkIsDefault(variant.id)" class="isDefaultRadio" ng-click="makeDefault(variant)"><label for="{{variant.id}}Default">Set default</label></td><td><a ng-click="selectVariant(variant)">Select</a><br><a ng-click="editVariant(variant)" ng-if="variant.createdBy === userid">Edit</a><br ng-if="variant.createdBy === userid"><a ng-click="deleteVariant(variant)" ng-if="variant.createdBy === userid">Delete</a><br ng-if="variant.createdBy === userid"></td></tr></tbody> </table> <div class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
                   controller: 'VariantCtrl',
                   size: 'lg',
                   resolve: {
@@ -161,6 +165,9 @@ angular.module('adidas.variants')
                     },
                     appName: function () {
                       return $scope.appName;
+                    },
+                    brand: function () {
+                      return $scope.brand;
                     }
                   }
                 });
@@ -209,10 +216,11 @@ angular.module('adidas.variants')
   });
 
   angular.module('adidas.variants')
-    .controller('VariantCtrl', function ($scope, params, defaultParams, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout) {
+    .controller('VariantCtrl', function ($scope, params, defaultParams, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout, $modal, brand) {
       $scope.params = params;
       $scope.userid = userid;
       $scope.appName = appName;
+      $scope.brand = brand;
       $scope.showProgress = false;
       $scope.results = '';
       $scope.hasError = false;
@@ -240,6 +248,8 @@ angular.module('adidas.variants')
         $scope.isDefault = defaultVariant;
         $scope.searchList();
       };
+
+      $scope.editVariant = '';
 
       $scope.pageChange = function () {
         $window.scrollTo(0, 0);
@@ -308,6 +318,45 @@ angular.module('adidas.variants')
           });
       };
 
+      $scope.editVariant = function (toEdit) {
+        var loadInstance = $modal.open({
+            template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Update Saved Search Settings</h3> </div></div><div class="modal-body"> <adi-progress-bar ng-show="false"></adi-progress-bar> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center"> Unable to save search at this time. </div><ul> <li> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="30" ng-model="model.name" class="search-field-modal match-input-width"> </li><li> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" class="search-field-modal match-input-width"> </li><li class="variant-make-public" ng-if="userType !==\'C\'"> <label for="">Share With Accounts</label> <label for="PUBLIC_Y"> <input id="PUBLIC_Y" type="radio" ng-model="model.isPublic" ng-value="\'Y\'">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="model.isPublic" ng-value="\'N\'" ng-click="model.userid=\'\'">No </label> <label for="" class="userid-field" ng-show="model.isPublic===\'Y\'"><img ng-hide="userType===\'C\'" src="images/search-icon.png" height="20" width="20" alt="" ng-click="openUserList()">Users (Optional)</label> <textarea name="USERID" type="text" size="30" ng-model="model.userId" class="search-field-modal userid-input" ng-show="model.isPublic===\'Y\'" ng-blur="formatAccounts()"></textarea> <div class="col-xs-12"> <p ng-if="model.isPublic===\'Y\'" style="font-weight: bold">You may select up to 100 accounts. If you do not select any accounts in the list, the search will be shared with all of your accounts.</p></div></li><li class="variant-make-public"> <label for="">Set as Default</label> <label for="DEFAULT_Y"> <input id="DEFAULT_Y" type="radio" ng-model="model.isDefault" ng-value="\'Y\'">Yes</label> <label for="DEFAULT_N"> <input id="DEFAULT_N" type="radio" ng-model="model.isDefault" ng-value="\'N\'">No </label> </li></ul></div><div class="modal-footer"> <div style="padding-top:15px"> <button ng-click="saveVariant()" class="bottombuttons" ng-class="{\'disabled-save\': (model.name===\'\' || model.description===\'\')}" ng-disabled="model.name===\'\' || model.description===\'\'">Save</button> <button ng-click="close()" class="bottombuttons">Close</button> </div></div>',
+            controller: 'EditVariantCtrl',
+            size: 'md',
+            resolve: {
+              params: function () {
+                return $scope.params;
+              },
+              userid: function () {
+                return $scope.userid;
+              },
+              appName: function () {
+                return $scope.appName;
+              },
+              mainLoader: function () {
+                return $scope.mainLoader;
+              },
+              userType: function () {
+                return $scope.usertype;
+              },
+              editVariant: function () {
+                return toEdit;
+              },
+              brand: function () {
+                return $scope.brand;
+              },
+              chosenItems: function () {
+                return toEdit.users;
+              }
+            }
+          });
+
+          loadInstance.result.then(function (response) {
+          }, function err (response) {
+            // Modal closed via backdrop click
+          });
+      };
+
       $scope.checkIsDefault = function (id) {
         if (id === $scope.isDefault) {
           return true;
@@ -359,6 +408,125 @@ angular.module('adidas.variants')
     });
 
     angular.module('adidas.variants')
+      .controller('EditVariantCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName, params, userType, $modal, userid, editVariant, brand) {
+        $scope.model = {
+          name: angular.copy(editVariant.variantName),
+          description: angular.copy(editVariant.variantDsc),
+          isPublic: angular.copy(editVariant.isPublic),
+          isDefault: angular.copy(editVariant.isDefault),
+          userId: angular.copy(editVariant.shareUsers)
+        };
+
+        $scope.brand = brand;
+        $scope.accountList = [];
+        $scope.showProgress = false;
+        $scope.userType = userType;
+        $scope.preselectedUsers = '';
+
+        $scope.hasError = false;
+
+        $scope.init = function () {
+          $scope.preselectedUsers = angular.copy($scope.model.userId);
+          VariantService.getAccountList(userid)
+            .then(function success (response) {
+              var accounts = [];
+              var res = eval(response.data);
+              for (var i=0; i<res.length; i++) {
+                if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
+                  accounts.push(res[i]);
+                }
+              }
+              $scope.accountList = accounts;
+            }, function err (response) {
+              console.log('Error while retrieving account list: ', response);
+            });
+        };
+
+        $scope.saveVariant = function () {
+          $scope.hasError = false;
+          $scope.mainLoader = true;
+          $scope.showProgress = true;
+          var paramsCopy = params;
+          if (appName === 'IA' && paramsCopy.startDate !== undefined) {
+            delete paramsCopy.startDate;
+          }
+
+          paramsCopy.soldToList = '';
+          if (userType === 'C') {
+            $scope.isPublic = 'N';
+            $scope.model.userId = '';
+          }
+
+          // VariantService.saveNewVariant(appName, $scope.model, paramsCopy)
+          var sendVariant = angular.copy(editVariant);
+          sendVariant.variantName = $scope.model.name;
+          sendVariant.variantDsc = $scope.model.description;
+          sendVariant.isDefault = $scope.model.isDefault;
+          sendVariant.isPublic = $scope.model.isPublic;
+          sendVariant.shareUsers = $scope.model.userId;
+          // FINISH UPDATING THE VARIANT COPY
+          VariantService.updateVariant(appName, editVariant.id, sendVariant, $scope.model.isDefault)
+            .then(function success (response) {
+              $scope.mainLoader = false;
+              $scope.showProgress = false;
+              $modalInstance.close(response);
+            }, function err (response) {
+              $scope.mainLoader = false;
+              $scope.showProgress = false;
+              $scope.hasError = true;
+            });
+        };
+
+      $scope.openUserList = function(size) {
+        var modalInstance = $modal.open({
+            animation: true,
+            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> </div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Code</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
+            controller: 'AccountLookupCtrl',
+            size: 'lg',
+            resolve: {
+                items: function() {
+                    return $scope.accountList;
+                },
+                usertype: function () {
+                  return $scope.userType;
+                },
+                chosenItems: function () {
+                  return editVariant.shareUsers;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(selectedAccounts) {
+            $scope.selected = selectedItem;
+        }, function(selectedAccounts) {
+          if (selectedAccounts !== undefined && selectedAccounts.length > 0) {
+            var string = '';
+            for (var i=0; i<selectedAccounts.length; i++) {
+              if (i === 0) {
+                string = selectedAccounts[i];
+              } else {
+                string = string + ',' + selectedAccounts[i];
+              }
+            }
+            $scope.model.userId = string;
+          } else {
+            $scope.model.userId = '';
+          }
+        });
+      };
+
+      $scope.formatAccounts = function () {
+        $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+      };
+
+      $scope.close = function () {
+        $modalInstance.close();
+      };
+
+      $scope.init();
+    });
+
+    angular.module('adidas.variants')
       .directive('adiProgressBar', function (appVer) {
         return {
           template: '<div class=loading><img src=images/loading.gif></div>'
@@ -367,7 +535,7 @@ angular.module('adidas.variants')
     });
 
     angular.module('adidas.variants')
-      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName, params, userType) {
+      .controller('VariantConfigCtrl', function ($scope, VariantService, $window, $modalInstance, mainLoader, appName, params, userType, $modal, userid, brand) {
         $scope.model = {
           name: '',
           description: '',
@@ -375,10 +543,29 @@ angular.module('adidas.variants')
           isDefault: 'N',
           userId: ''
         };
+        $scope.brand = brand;
+        $scope.accountList = [];
         $scope.showProgress = false;
         $scope.userType = userType;
 
         $scope.hasError = false;
+
+        $scope.init = function () {
+          VariantService.getAccountList(userid)
+            .then(function success (response) {
+              var accounts = [];
+              var res = eval(response.data);
+              for (var i=0; i<res.length; i++) {
+                if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
+                  accounts.push(res[i]);
+                }
+              }
+              $scope.accountList = accounts;
+              // $scope.accountList = eval(response.data);
+            }, function err (response) {
+              console.log('Error while retrieving account list: ', response);
+            });
+        };
 
         $scope.saveVariant = function () {
           $scope.hasError = false;
@@ -407,14 +594,198 @@ angular.module('adidas.variants')
             });
         };
 
-        $scope.close = function () {
-          $modalInstance.close();
+      $scope.openUserList = function(size) {
+
+        var modalInstance = $modal.open({
+            animation: true,
+            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> </div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Code</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
+            controller: 'AccountLookupCtrl',
+            size: 'lg',
+            resolve: {
+                items: function() {
+                    return $scope.accountList;
+                },
+                usertype: function () {
+                  return $scope.userType;
+                },
+                chosenItems: function () {
+                  return $scope.model.userId;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(selectedAccounts) {
+            $scope.selected = selectedItem;
+        }, function(selectedAccounts) {
+          if (selectedAccounts !== undefined && selectedAccounts.length > 0) {
+            var string = '';
+            for (var i=0; i<selectedAccounts.length; i++) {
+              if (i === 0) {
+                string = selectedAccounts[i];
+              } else {
+                string = string + ',' + selectedAccounts[i];
+              }
+            }
+            $scope.model.userId = string;
+          } else {
+            $scope.model.userId = '';
+          }
+        });
+      };
+
+      $scope.formatAccounts = function () {
+        $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+      };
+
+      $scope.close = function () {
+        $modalInstance.close();
+      };
+
+      $scope.init();
+    });
+
+    angular.module('adidas.variants')
+    .controller('AccountLookupCtrl', function($scope, $window, $log, $modalInstance, $filter, items, usertype, chosenItems) {
+        $scope.brand = 'A';
+        $scope.model = {
+            searchParams: '',
+            shipToListParams: '',
+            showProgress: false,
+            shiptoname: '',
+            city: '',
+            shipToNum: '',
+            pzcode: '',
+            currentPage: 1,
+            pageSize: 50,
+            pagesToShow: 5,
+            beginFrom: 0,
+            filteredList: '',
+            soldToNum: '',
+            zip: ''
         };
-      });
+        $scope.itemSelect = '';
+        $scope.selectedAccounts = [];
+        $scope.chosenItems = '';
+
+        $scope.init = function() {
+            var predefinedShiptos = [];
+            if (chosenItems !== undefined && chosenItems !== '') {
+              predefinedShiptos = angular.copy(chosenItems).split(',');
+            }
+            $scope.itemBrandList = ''; //set selected brand on initial load
+            for (var i=0; i<predefinedShiptos.length; i++) {
+              console.log('SHIPTO: ', predefinedShiptos[i]);
+              $scope.selectedAccounts.push(predefinedShiptos[i]);
+            }
+            $scope.model.currentPage = 1;
+            $scope.model.shipToListParams = items;
+            $scope.model.filteredList = '';
+            $scope.searchList();
+        };
+
+        $scope.searchList = function () {
+            var nameUpper = $scope.model.shiptoname.toUpperCase();
+            var cityUpper = $scope.model.city.toUpperCase();
+            var shipToUpper = $scope.model.shipToNum.toUpperCase();
+            var soldToUpper = $scope.model.soldToNum.toUpperCase();
+            var zipUpper = $scope.model.zip.toUpperCase();
+            var soldToParams = '';
+
+            // if ($scope.model.searchParams.soldToNbr.length>=10) {
+            //     if ($scope.model.searchParams.soldToNbr.search(',')!==-1) {
+            //         soldToParams = $scope.model.searchParams.soldToNbr.split(',');
+            //     } else {
+            //         soldToParams = [];
+            //         soldToParams.push($scope.model.searchParams.soldToNbr);
+            //     }
+            // }
+
+            $scope.model.filteredList = $filter('filter')($scope.model.shipToListParams, function (item) {
+                if(item.postal.toUpperCase().indexOf(zipUpper) !== -1 && item.name.toUpperCase().indexOf(nameUpper)!==-1 && item.city.toUpperCase().indexOf(cityUpper)!==-1 && item.shipTo.toUpperCase().indexOf(shipToUpper)!==-1 && item.soldTo.toUpperCase().indexOf(soldToUpper)!==-1){
+                    if (usertype !== 'C' && (soldToParams.length>0 || soldToParams!=='')) {
+                        var match = false;
+                        for (var i=0; i<soldToParams.length;i++) {
+                            if (item.soldTo === soldToParams[i]) {
+                                match = true;
+                            }
+                        }
+                        return match;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            });
+        };
+
+        $scope.checkAccountDoesNotExist = function (shipto) {
+          var match = false;
+          for (var i=0; i<$scope.selectedAccounts.length; i++) {
+            if ($scope.selectedAccounts[i] === shipto) {
+              match = true;
+            }
+          }
+          return match;
+        };
+
+        $scope.addShipTo = function (shipTo) {
+
+          if ($scope.selectedAccounts.length === 0) {
+            $scope.selectedAccounts.push(shipTo);
+            return;
+          }
+          if ($scope.selectedAccounts.length >= 100) {
+            alert('The maximum number of accounts you can share with is 100. If you would like to share with all of your accounts, please leave the Share With Accounts field blank.');
+            return;
+          }
+          var match = false;
+          for (var i=0; i<$scope.selectedAccounts.length; i++) {
+            if ($scope.selectedAccounts[i] === shipTo) {
+              match = true;
+              $scope.selectedAccounts = $scope.selectedAccounts.splice(i, 0);
+              return;
+            }
+          }
+          if (!match) {
+            $scope.selectedAccounts.push(shipTo);
+          }
+        };
+
+        $scope.removeShipTo = function (shipTo) {
+          for (var i=0; i<$scope.selectedAccounts.length; i++) {
+            if ($scope.selectedAccounts[i] === shipTo) {
+              $scope.selectedAccounts.splice(i, 1);
+              return;
+            }
+          }
+        };
+
+        $scope.cancel = function() {
+            // MagicAPI.cancelRequest();
+            $modalInstance.dismiss($scope.selectedAccounts);
+        };
+
+        $scope.selectedShipTo = function(selected) {
+            // alert(selected.lineCust.ds);
+            // globalParams.setShipTo(selected.lineCust.shipTo);
+            $scope.cancel();
+        };
+
+        $scope.shipPageChanged = function() {
+            $window.scrollTo(0, 0);
+            $log.log('Page changed to: ' + $scope.model.currentPage);
+            var changePage = ($scope.model.currentPage * $scope.model.pageSize) - $scope.model.pageSize;
+            $scope.model.beginFrom = changePage;
+        };
+
+        $scope.init();
+    });
 
   angular.module('adidas.variants')
     .factory('VariantService', function ($q, $http, $location, $window) {
       var localData = 'bower_components/adidas.variants/variants.txt';
+      var localAccounts = 'bower_components/adidas.variants/accountlist.txt';
       var MAGIC_URL = '/Magic94scripts/mgrqispi94.dll';
       var serviceUrl = 'appname=Portal_SAP&prgname=NG_VARIANT_SERVICE';
       var absURL = $location.absUrl();
@@ -472,10 +843,15 @@ angular.module('adidas.variants')
           if (def === '') {
             isDefault = variant.isDefault;
           }
+          if (variant.shareUsers !== undefined && variant.shareUsers !== '') {
+            variant.shareUsere = variant.shareUsers;
+          }
           var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=U&APPNAME=' + appName + '&VARIANTID=' + variantID + '&VARIANTNAME=' + variant.variantName + '&VARIANTDESC=' + variant.variantDsc + '&ISDEFAULT=' + isDefault + '&ISPUBLIC=' + variant.isPublic + '&SHAREUSERID=' + variant.shareUsere + '&VARIANTPARAMS=' + JSON.stringify(variant.params);
+          console.log('PARAMS BEING SENT ON UPDATE: ', params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
+                console.log('UPDATE RESPONSE: ', response);
                 deferred.resolve(response);
               }, function err (response) {
                 var res = eval(response.data);
@@ -491,7 +867,8 @@ angular.module('adidas.variants')
         },
         saveNewVariant: function (appName, variant, params) {
           var deferred = $q.defer();
-          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&SHAREUSERID=' + variant.userid + '&VARIANTPARAMS=' + JSON.stringify(params);
+          var params = '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):'') + '&MODE=N&APPNAME=' + appName + '&VARIANTNAME=' + variant.name + '&VARIANTDESC=' + variant.description + '&ISPUBLIC=' + variant.isPublic + '&ISDEFAULT=' + variant.isDefault + '&SHAREUSERID=' + variant.userId + '&VARIANTPARAMS=' + JSON.stringify(params);
+          console.log('PARAMS FOR SAVING: ', params);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, serviceUrl+params.toString())
               .then(function success (response) {
@@ -539,6 +916,27 @@ angular.module('adidas.variants')
               });
           }
           return deferred.promise;
+        },
+        getAccountList: function (userId) {
+          var deferred = $q.defer();
+          var params = 'appname=Portal_SAP&prgname=' + 'NG_OP_PARAM'+'&PROCESS_TYPE=A' + '&SAVEFILE=N&ACCOUNT=' + userId;
+          console.log('userid in account list: ', userId);
+          if (absURL.indexOf(':9000') === -1) {
+            $http.post(MAGIC_URL, params)
+              .then(function (response) {
+                deferred.resolve(response);
+              }, function err (response) {
+                deferred.reject(response);
+              });
+          } else {
+            // local
+            $http.get(localAccounts)
+              .then(function (response) {
+                deferred.resolve(response);
+              });
+          }
+          return deferred.promise;
+
         }
       };
     });
