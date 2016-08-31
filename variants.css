@@ -22,6 +22,9 @@
     margin-left: 20px;
 }
 
+.error-message-alert-variant {
+    text-align: center!important;
+}
 
 .modal-body ul li {
     list-style-type: none;
