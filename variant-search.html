@@ -83,9 +83,9 @@
           <td>{{variant.createdBy}}</td>
           <td>{{variant.lastModified}}</td>
           <td><input name="{{variant.id}}Default" id="{{variant.id}}Default" ng-model="isDefault" type="radio" ng-checked="checkIsDefault(variant.id)" class="isDefaultRadio" ng-click="makeDefault(variant)"><label for="{{variant.id}}Default">Set default</label></td>
-          <td><a ng-click="selectVariant(variant)">Select</a><br>
-            <a ng-click="editVariant(variant)">Edit</a><br>
-            <a ng-click="deleteVariant(variant)">Delete</a><br>
+          <td><a ng-click="selectVariant(variant)" style="cursor: pointer">Select</a><br>
+            <a ng-click="editVariant(variant)" style="cursor: pointer">Edit</a><br>
+            <a ng-click="deleteVariant(variant)" style="cursor: pointer">Delete</a><br>
           </td>
           <!-- <td><i class="glyphicon glyphicon-remove deleteVariantButton" ng-click="deleteVariant(variant)" ng-if="variant.createdBy === userid"></i></td> -->
         </tr>

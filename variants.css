@@ -190,7 +190,12 @@
 
 .userid-field {
     font-weight: bold!important;
-    padding-left: 1em!important;
+    padding-left: 1.5em!important;
+    vertical-align: top;
+}
+
+.account-message {
+    padding-left: 1.5em!important;
 }
 
 .userid-input {
