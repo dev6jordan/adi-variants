@@ -168,6 +168,9 @@ angular.module('adidas.variants')
                     },
                     brand: function () {
                       return $scope.brand;
+                    },
+                    userType: function () {
+                      return $scope.usertype;
                     }
                   }
                 });
@@ -221,7 +224,7 @@ angular.module('adidas.variants')
   });
 
   angular.module('adidas.variants')
-    .controller('VariantCtrl', function ($scope, params, defaultParams, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout, $modal, brand, $rootScope) {
+    .controller('VariantCtrl', function ($scope, params, defaultParams, userid, appName, variants, defaultVariant, VariantService, $window, $filter, $modalInstance, $timeout, $modal, brand, $rootScope, userType) {
       $scope.params = params;
       $scope.userid = userid;
       $scope.appName = appName;
@@ -246,6 +249,7 @@ angular.module('adidas.variants')
       $scope.predicate = 'lastModified';
       $scope.reverse = true;
       $scope.resultsCopy = '';
+      $scope.userType = userType;
 
       $scope.init = function () {
         $scope.showProgress = true;
@@ -342,7 +346,7 @@ angular.module('adidas.variants')
                 return $scope.mainLoader;
               },
               userType: function () {
-                return $scope.usertype;
+                return $scope.userType;
               },
               editVariant: function () {
                 return toEdit;
@@ -460,7 +464,6 @@ angular.module('adidas.variants')
                 }
               });
 
-             
               $scope.accountList = filteredAccounts;
               // $scope.accountList = accounts;
             }, function err (response) {
