@@ -39,6 +39,11 @@ angular.module('adidas.variants')
                               $scope.params[resKey] = resVal;
                             }
                           }
+                          if (resKey === 'orderDateFrom' || resKey === 'orderDateTo' || resKey === 'reqShipDateFrom' || resKey === 'reqShipDateTo' || resKey === 'cancelDateFrom' || resKey === 'cancelDateTo' || resKey === 'invoiceDateFrom' || resKey === 'invoiceDateTo' || resKey === 'OrderDateTo' || resKey === 'OrderDateFrom' || resKey === 'shipDateFrom' || resKey === 'shipDateTo' || resKey === 'CancelDateFrom' || resKey === 'CancelDateTo') {
+                            if (resVal !== null) {
+                              $scope.params[resKey] = new Date(resVal);
+                            }
+                          }
                         });
                     });
                     $scope.defaultVariant = res[0].id;
@@ -144,7 +149,7 @@ angular.module('adidas.variants')
                 }
                 $scope.mainLoader = false;
                 var loadInstance = $modal.open({
-                  template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Favorite Search Lookup</h3> </div></div><div class="modal-body"> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center">{{errorMsg}}</div><div ng-show="hasSuccess" class="alert alert-success" role="alert" align="center">{{successMsg}}</div><div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform leftvariantform"> <div> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="100" ng-model="model.name" ng-change="searchList()"> </div><div> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform rightvariantform"> <div class="onlyMySearches"> <label for="" class="breakLine">Only My Searches</label> <label for="PUBLIC_Y" class="push-right"> <input id="PUBLIC_Y" type="radio" ng-model="onlyMine" ng-value="true" ng-change="searchList()">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="onlyMine" ng-value="false" ng-change="searchList()">No </label> </div><div ng-if="!onlyMine"> <label for="">Created By</label> <input name="USER" id="onlyMineUser"value="" size="30" maxlength="50" type="text" ng-model="model.userID" ng-change="searchList()"> </div></form> </div></div><div class="modal-footer"> <div style="padding-top:15px" class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.filteredList.length===0" class="variantResultList"> <thead> <tr> <th> <a href="" ng-click="order(\'variantName\')" class="sort-link">Search Name</a> <span class="sortorder" ng-show="predicate===\'variantName\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'variantDsc\')" class="sort-link">Description</a> <span class="sortorder" ng-show="predicate===\'variantDsc\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'createdBy\')" class="sort-link">Created By</a> <span class="sortorder" ng-show="predicate===\'createdBy\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'lastModified\')" class="sort-link">Last Modified</a> <span class="sortorder" ng-show="predicate===\'lastModified\'" ng-class="{reverse:reverse}"></span> </th> <th>Default</th> <th>Action</th> </tr></thead> <tbody> <tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"> <td>{{variant.variantName}}</td><td>{{variant.variantDsc}}</td><td>{{variant.createdBy}}</td><td>{{variant.lastModified}}</td><td><input name="{{variant.id}}Default" id="{{variant.id}}Default" ng-model="isDefault" type="radio" ng-checked="checkIsDefault(variant.id)" class="isDefaultRadio" ng-click="makeDefault(variant)"><label for="{{variant.id}}Default">Set default</label></td><td><a ng-click="selectVariant(variant)" style="cursor: pointer">Select</a><br><a ng-click="editVariant(variant)" style="cursor: pointer">Edit</a><br><a ng-click="deleteVariant(variant)" style="cursor: pointer">Delete</a><br></td></tr></tbody> </table> <div class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
+                  template: '<div class="modal-header"> <div ng-click="close()" class="close">X</div><div class="modal-title"> <h3 class="modal-title">Favorite Search Lookup</h3> </div></div><div class="modal-body"> <div ng-show="hasError" class="alert alert-danger" role="alert" align="center">{{errorMsg}}</div><div ng-show="hasSuccess" class="alert alert-success" role="alert" align="center">{{successMsg}}</div><div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform leftvariantform"> <div> <label for="">Search Name</label> <input name="VARIANT" type="text" size="30" maxlength="100" ng-model="model.name" ng-change="searchList()"> </div><div> <label for="">Description</label> <input name="DESCRIPTION" type="text" size="30" maxlength="100" ng-model="model.description" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform rightvariantform"> <div class="onlyMySearches"> <label for="" class="breakLine">Only My Searches</label> <label for="PUBLIC_Y" class="push-right"> <input id="PUBLIC_Y" type="radio" ng-model="onlyMine" ng-value="true" ng-change="searchList()">Yes</label> <label for="PUBLIC_N"> <input id="PUBLIC_N" type="radio" ng-model="onlyMine" ng-value="false" ng-change="searchList()">No </label> </div><div ng-if="!onlyMine"> <label for="">Created By</label> <input name="USER" id="onlyMineUser"value="" size="30" maxlength="50" type="text" ng-model="model.userID" ng-change="searchList()"> </div></form> </div></div><div class="modal-footer"> <div style="padding-top:15px" class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.filteredList.length===0" class="variantResultList"> <thead> <tr> <th> <a href="" ng-click="order(\'variantName\')" class="sort-link">Search Name</a> <span class="sortorder" ng-show="predicate===\'variantName\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'variantDsc\')" class="sort-link">Description</a> <span class="sortorder" ng-show="predicate===\'variantDsc\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'createdBy\')" class="sort-link">Created By</a> <span class="sortorder" ng-show="predicate===\'createdBy\'" ng-class="{reverse:reverse}"></span> </th> <th> <a href="" ng-click="order(\'lastModified\')" class="sort-link">Last Modified</a> <span class="sortorder" ng-show="predicate===\'lastModified\'" ng-class="{reverse:reverse}"></span> </th> <th>Default</th> <th>Action</th> </tr></thead> <tbody> <tr ng-repeat="variant in model.filteredList | orderBy:[predicate, \'variantName\']:reverse | limitTo:model.pageSize:model.beginFrom"> <td>{{variant.variantName}}</td><td>{{variant.variantDsc}}</td><td>{{variant.createdBy}}</td><td>{{variant.lastModified}}</td><td><input name="{{variant.id}}Default" id="{{variant.id}}Default" ng-model="isDefault" type="radio" ng-checked="checkIsDefault(variant.id)" class="isDefaultRadio" ng-click="makeDefault(variant)"><label for="{{variant.id}}Default">Set default</label></td><td><a ng-click="selectVariant(variant)" style="cursor: pointer">Select</a><br><a ng-click="editVariant(variant)" style="cursor: pointer" ng-if="variant.createdBy===userid">Edit</a><br><a ng-click="deleteVariant(variant)" style="cursor: pointer" ng-if="variant.createdBy===userid">Delete</a><br></td></tr></tbody> </table> <div class="desktop"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="pageChange()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
                   controller: 'VariantCtrl',
                   size: 'lg',
                   resolve: {
@@ -177,8 +182,23 @@ angular.module('adidas.variants')
 
                 loadInstance.result.then(function (variant) {
                   if (variant !== undefined) {
-                    $scope.params = variant.params;
+                    _.each(variant.params, function (resVal, resKey) {
+                      if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
+                        if (resKey !== 'brand' && $scope.appName === 'OT') {
+                          $scope.params[resKey] = resVal;
+                        }
+                      }
+                      if (resKey === 'orderDateFrom' || resKey === 'orderDateTo' || resKey === 'reqShipDateFrom' || resKey === 'reqShipDateTo' || resKey === 'cancelDateFrom' || resKey === 'cancelDateTo' || resKey === 'invoiceDateFrom' || resKey === 'invoiceDateTo' || resKey === 'OrderDateTo' || resKey === 'OrderDateFrom' || resKey === 'shipDateFrom' || resKey === 'shipDateTo' || resKey === 'CancelDateFrom' || resKey === 'CancelDateTo') {
+                        if (resVal !== null) {
+                          $scope.params[resKey] = new Date(resVal);
+                        }
+                      }
+                    });
+                    // $scope.params = variant.params;
                     $scope.variant = variant;
+                    $timeout(function () {
+                      $scope.$apply();
+                    });
                   }
                 }, function err () {
                   // Modal closed via backdrop click
@@ -445,19 +465,18 @@ angular.module('adidas.variants')
           $scope.preselectedUsers = angular.copy($scope.model.userId);
           VariantService.getAccountList(userid)
             .then(function success (response) {
-              var accounts = [];
               var filteredAccounts = [];
-              var res = eval(response.data);
-              for (var i=0; i<res.length; i++) {
-                if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
-                  accounts.push(res[i]);
-                }
-              }
+              var accounts = eval(response.data);
+              // for (var i=0; i<res.length; i++) {
+              //   if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
+              //     accounts.push(res[i]);
+              //   }
+              // }
 
-              var unique = {};
+              // accounts.push(res);
+
               filteredAccounts = $filter('filter')(accounts, function (item) {
-                if(item.name==='-- select --' || (unique[item.soldTo] === undefined && (item.shipTo.substr(7,3)!== '999' || item.promo === 'Y'))){
-                  unique[item.soldTo] = '';
+                if(item.shipTo === item.soldTo && item.name !== '-- select --'){
                   return true;
                 } else {
                   return false;
@@ -526,9 +545,11 @@ angular.module('adidas.variants')
         });
 
         modalInstance.result.then(function(selectedAccounts) {
+          if (selectedAccounts !== 'backdrop click') {
             $scope.selected = selectedItem;
+          }
         }, function(selectedAccounts) {
-          if (selectedAccounts !== undefined && selectedAccounts.length > 0) {
+          if (selectedAccounts !== undefined && selectedAccounts !== 'backdrop click' && selectedAccounts.length > 0) {
             var string = '';
             for (var i=0; i<selectedAccounts.length; i++) {
               if (i === 0) {
@@ -582,29 +603,25 @@ angular.module('adidas.variants')
         $scope.init = function () {
           VariantService.getAccountList(userid)
             .then(function success (response) {
-              var accounts = [];
               var filteredAccounts = [];
-              var res = eval(response.data);
-              for (var i=0; i<res.length; i++) {
-                if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
-                  accounts.push(res[i]);
-                }
-              }
+              var accounts = eval(response.data);
+              // for (var i=0; i<res.length; i++) {
+              //   if (res[i].brand === $scope.brand || res[i].brand === 'AR' && res[i].shipTo !== '') {
+              //     accounts.push(res[i]);
+              //   }
+              // }
 
-              var unique = {};
+              // accounts.push(res);
+
               filteredAccounts = $filter('filter')(accounts, function (item) {
-                if(item.name==='-- select --' || (unique[item.soldTo] === undefined && (item.shipTo.substr(7,3)!== '999' || item.promo === 'Y'))){
-                  unique[item.soldTo] = '';
+                if(item.shipTo === item.soldTo && item.name !== '-- select --'){
                   return true;
                 } else {
                   return false;
                 }
               });
 
-             
               $scope.accountList = filteredAccounts;
-              // $scope.accountList = accounts;
-              // $scope.accountList = eval(response.data);
             }, function err (response) {
               console.log('Error while retrieving account list: ', response);
             });
@@ -660,7 +677,7 @@ angular.module('adidas.variants')
         modalInstance.result.then(function(selectedAccounts) {
             $scope.selected = selectedItem;
         }, function(selectedAccounts) {
-          if (selectedAccounts !== undefined && selectedAccounts.length > 0) {
+          if (selectedAccounts !== undefined && selectedAccounts !== 'backdrop click' &&  selectedAccounts !== undefined &&selectedAccounts.length > 0) {
             var string = '';
             for (var i=0; i<selectedAccounts.length; i++) {
               if (i === 0) {
@@ -717,7 +734,6 @@ angular.module('adidas.variants')
             }
             $scope.itemBrandList = ''; //set selected brand on initial load
             for (var i=0; i<predefinedShiptos.length; i++) {
-              console.log('SHIPTO: ', predefinedShiptos[i]);
               $scope.selectedAccounts.push(predefinedShiptos[i]);
             }
             $scope.model.currentPage = 1;
