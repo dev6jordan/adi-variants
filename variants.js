@@ -35,9 +35,14 @@ angular.module('adidas.variants')
                     _.each(res, function (value, key) {
                         _.each(value.params, function (resVal, resKey) {
                           if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
-                            // if (resKey !== 'brand' && $scope.appName === 'OT') {
+                            // if (resKey !== 'brand' && $scope.appName === 'OT') {}
+                            if ($scope.appName === 'OT') {
+                              if (resKey!== 'brand') {
+                                $scope.params[resKey] = resVal;
+                              }
+                            } else {
                               $scope.params[resKey] = resVal;
-                            // }
+                            }
                           }
                           if (resKey === 'orderDateFrom' || resKey === 'orderDateTo' || resKey === 'reqShipDateFrom' || resKey === 'reqShipDateTo' || resKey === 'cancelDateFrom' || resKey === 'cancelDateTo' || resKey === 'invoiceDateFrom' || resKey === 'invoiceDateTo' || resKey === 'OrderDateTo' || resKey === 'OrderDateFrom' || resKey === 'shipDateFrom' || resKey === 'shipDateTo' || resKey === 'CancelDateFrom' || resKey === 'CancelDateTo') {
                             if (resVal !== null) {
@@ -185,9 +190,14 @@ angular.module('adidas.variants')
                   if (variant !== undefined) {
                     _.each(variant.params, function (resVal, resKey) {
                       if (resKey !== 'orderDateFrom' && resKey !== 'orderDateTo' && resKey !== 'reqShipDateFrom' && resKey !== 'reqShipDateTo' && resKey !== 'cancelDateFrom' && resKey !== 'cancelDateTo' && resKey !== 'invoiceDateFrom' && resKey !== 'invoiceDateTo' && resKey !== 'OrderDateTo' && resKey !== 'OrderDateFrom' && resKey !== 'shipDateFrom' && resKey !== 'shipDateTo' && resKey !== 'CancelDateFrom' && resKey !== 'CancelDateTo') {
-                        // if (resKey !== 'brand' && $scope.appName === 'OT') {
+                        // if (resKey !== 'brand' && $scope.appName === 'OT') {}
+                        if ($scope.appName === 'OT') {
+                          if (resKey!== 'brand') {
+                            $scope.params[resKey] = resVal;
+                          }
+                        } else {
                           $scope.params[resKey] = resVal;
-                        // }
+                        }
                       }
                       if (resKey === 'orderDateFrom' || resKey === 'orderDateTo' || resKey === 'reqShipDateFrom' || resKey === 'reqShipDateTo' || resKey === 'cancelDateFrom' || resKey === 'cancelDateTo' || resKey === 'invoiceDateFrom' || resKey === 'invoiceDateTo' || resKey === 'OrderDateTo' || resKey === 'OrderDateFrom' || resKey === 'shipDateFrom' || resKey === 'shipDateTo' || resKey === 'CancelDateFrom' || resKey === 'CancelDateTo') {
                         if (resVal !== null) {
