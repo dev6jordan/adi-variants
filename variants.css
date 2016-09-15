@@ -18,7 +18,7 @@
 }
 
 .variant-icon-disabled:hover {
-    cursor: default;
+    cursor: default!important;
 }
 
 .variant-make-public input {
@@ -270,6 +270,14 @@
 .modal-body ul:last-child li:last-child {       
     margin: 0;      
     border-bottom: none;        
+}
+
+.variant-icon:hover {
+    cursor: pointer;
+}
+
+.userid-field img {
+    cursor: pointer;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
