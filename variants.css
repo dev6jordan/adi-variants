@@ -280,6 +280,21 @@
     cursor: pointer;
 }
 
+.action-button-container {
+    position: relative!important;
+}
+
+.add-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.disabled-search {
+  cursor: default;
+  opacity: 0.5;
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
     .search-field-modal {
         width: 50%;

@@ -32,8 +32,12 @@
     <div class="buttonwrapper"> </div>
     <div style="margin-top:20px" class="desktop top-wrapper">
         <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
-        <div class="col-xs-12">
+        <div class="col-xs-12 action-button-container">
             <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button>
+            <div class="add-buttons">
+                <button ng-click="addAll()" class="bottombuttons text-right done-button">Add All</button>
+                <button ng-click="removeAll()" ng-disabled="areNoneSelected()" ng-class="areNoneSelected() ? 'disabled-search' : ''" class="bottombuttons text-right done-button">Remove All</button>
+            </div>
         </div>
     </div>
     <div class="mobile">

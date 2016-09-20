@@ -541,7 +541,7 @@ angular.module('adidas.variants')
       $scope.openUserList = function(size) {
         var modalInstance = $modal.open({
             animation: true,
-            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> </div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Sold-To #</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
+            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12 action-button-container"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> <div class="add-buttons"> <button ng-click="addAll()" class="bottombuttons text-right done-button">Add All</button> <button ng-click="removeAll()" ng-disabled="areNoneSelected()" ng-class="areNoneSelected() ? \'disabled-search\' : \'\'" class="bottombuttons text-right done-button">Remove All</button> </div></div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Sold-To #</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
             controller: 'AccountLookupCtrl',
             size: 'lg',
             resolve: {
@@ -580,6 +580,22 @@ angular.module('adidas.variants')
 
       $scope.formatAccounts = function () {
         $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+        var accounts = angular.copy($scope.model.userId.split(','));
+        var string = '';
+        if (accounts.length > 100) {
+          alert('The maximum number of accounts you can share with is 100. If you would like to share with all of your accounts, please leave the Share With Accounts field blank.');
+          for (var i=0; i<accounts.length; i++) {
+            if (i <= 99) {
+              if (i === 0) {
+                string = string + accounts[i];
+              } else {
+                string = string + ',' + accounts[i];
+              }
+            }
+          }
+          $scope.model.userId = string;
+          return;
+        }
       };
 
       $scope.close = function () {
@@ -671,7 +687,7 @@ angular.module('adidas.variants')
 
         var modalInstance = $modal.open({
             animation: true,
-            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> </div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Sold-To #</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
+            template: '<div class="modal-header"> <div ng-click="cancel()" class="close">X</div><h3 class="modal-title">Share With Accounts</h3></div><div class="modal-body" stop-event="touchend"> <progress-bar ng-show="model.showProgress"></progress-bar> <div class="col-md-6 shiptocontainer desktop"> <form class="modal-form shiptoform"> <div> <label>Ship To #</label> <input maxlength="10" type="text" ng-model="model.shipToNum" ng-change="searchList()"> </div><div> <label>Sold To #</label> <input maxlength="10" type="text" ng-model="model.soldToNum" ng-change="searchList()"> </div></form> </div><div class="col-md-6 namecontainer desktop"> <form class="modal-form nameform"> <div> <label class="nameinput">Name</label> <input maxlength="50" type="text" ng-model="model.shiptoname" ng-change="searchList()"> </div><div> <label class="cityinput">City</label> <input maxlength="50" type="text" ng-model="model.city" ng-change="searchList()"> </div><div> <label class="zipinput">Zip Code</label> <input maxlength="50" type="text" ng-model="model.zip" ng-change="searchList()"> </div></form> <br></div></div><div class="modal-footer"> <div class="buttonwrapper"> </div><div style="margin-top:20px" class="desktop top-wrapper"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> <div class="col-xs-12 action-button-container"> <button ng-click="cancel()" class="bottombuttons text-center done-button">Done</button> <div class="add-buttons"> <button ng-click="addAll()" class="bottombuttons text-right done-button">Add All</button> <button ng-click="removeAll()" ng-disabled="areNoneSelected()" ng-class="areNoneSelected() ? \'disabled-search\' : \'\'" class="bottombuttons text-right done-button">Remove All</button> </div></div></div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div><table border="1" ng-hide="model.shipToListParams.length===0"> <thead> <tr> <th>Sold-To #</th> <th>Name / City</th> <th>Add / Remove</th> </tr></thead> <tbody> <tr ng-repeat="lineCust in model.filteredList | limitTo:model.pageSize:model.beginFrom"> <td>{{lineCust.shipTo}}</td><td>{{lineCust.name}}<br>{{lineCust.city}}</td><td> <button ng-click="addShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="!checkAccountDoesNotExist(lineCust.shipTo)">Add</button> <button ng-click="removeShipTo(lineCust.shipTo)" class="bottombuttons" ng-show="checkAccountDoesNotExist(lineCust.shipTo)">Remove</button> </td></tr></tbody> </table> <div class="col-xs-12 text-center" style="margin-bottom: 10px"> <button ng-click="cancel()" class="bottombuttons text-center">Done</button> </div><div style="padding-top:15px" class="desktop"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination> </div><div class="mobile"> <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="false" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination> </div></div>',
             controller: 'AccountLookupCtrl',
             size: 'lg',
             resolve: {
@@ -708,6 +724,22 @@ angular.module('adidas.variants')
 
       $scope.formatAccounts = function () {
         $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+        var accounts = angular.copy($scope.model.userId.split(','));
+        var string = '';
+        if (accounts.length > 100) {
+          alert('The maximum number of accounts you can share with is 100. If you would like to share with all of your accounts, please leave the Share With Accounts field blank.');
+          for (var i=0; i<accounts.length; i++) {
+            if (i <= 99) {
+              if (i === 0) {
+                string = string + accounts[i];
+              } else {
+                string = string + ',' + accounts[i];
+              }
+            }
+          }
+          $scope.model.userId = string;
+          return;
+        }
       };
 
       $scope.close = function () {
@@ -739,6 +771,7 @@ angular.module('adidas.variants')
         $scope.itemSelect = '';
         $scope.selectedAccounts = [];
         $scope.chosenItems = '';
+        $scope.originalSelectionLength = '';
 
         $scope.init = function() {
             var predefinedShiptos = [];
@@ -753,6 +786,7 @@ angular.module('adidas.variants')
             $scope.model.currentPage = 1;
             $scope.model.shipToListParams = items;
             $scope.model.filteredList = '';
+            $scope.originalSelectionLength = angular.copy($scope.selectedAccounts.length);
             $scope.searchList();
         };
 
@@ -831,6 +865,42 @@ angular.module('adidas.variants')
               $scope.selectedAccounts.splice(i, 1);
               return;
             }
+          }
+        };
+
+        $scope.addAll = function () {
+          var totalItems = angular.copy($scope.selectedAccounts.length);
+
+          for (var i=0; i<$scope.model.filteredList.length; i++) {
+            var match = false;
+            if (totalItems >= 100) {
+              alert('You have reached the maximum number of accounts. The first ' + (100-$scope.originalSelectionLength)  + ' account(s) have been selected.');
+              return;
+            }
+            for (var k=0; k<$scope.selectedAccounts.length; k++) {
+              if ($scope.model.filteredList[i].shipTo === $scope.selectedAccounts[k]) {
+                match = true;
+              }
+            }
+            if (!match) {
+              $scope.selectedAccounts.push($scope.model.filteredList[i].shipTo);
+              totalItems = totalItems + 1;
+            }
+          } 
+        };
+
+        $scope.removeAll = function () {
+          var confirmRemove = (confirm('Would you like to remove all selected accounts?'));
+          if (confirmRemove) {
+            $scope.selectedAccounts = [];
+          }
+        };
+
+        $scope.areNoneSelected = function () {
+          if ($scope.selectedAccounts.length === 0) {
+            return true;
+          } else {
+            return false;
           }
         };
 
