@@ -580,6 +580,7 @@ angular.module('adidas.variants')
 
       $scope.formatAccounts = function () {
         $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+        $scope.model.userId = $scope.model.userId.toUpperCase();
         var accounts = angular.copy($scope.model.userId.split(','));
         var string = '';
         if (accounts.length > 100) {
@@ -593,6 +594,7 @@ angular.module('adidas.variants')
               }
             }
           }
+          string = string.toUpperCase();
           $scope.model.userId = string;
           return;
         }
@@ -724,6 +726,7 @@ angular.module('adidas.variants')
 
       $scope.formatAccounts = function () {
         $scope.model.userId = $scope.model.userId.replace(/[ ,]+/g, ",");
+        $scope.model.userId = $scope.model.userId.toUpperCase();
         var accounts = angular.copy($scope.model.userId.split(','));
         var string = '';
         if (accounts.length > 100) {
@@ -737,6 +740,7 @@ angular.module('adidas.variants')
               }
             }
           }
+          string = string.toUpperCase();
           $scope.model.userId = string;
           return;
         }
