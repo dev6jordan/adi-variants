@@ -295,6 +295,196 @@
   opacity: 0.5;
 }
 
+.shiptocontainer {
+    margin: 10px 0;
+    min-width: 235px;
+    overflow: hidden;
+    float: left;
+    /*padding-right: 2em;*/
+    padding-left: 0;
+    text-align: right!important;
+}
+.shiptocontainer div {
+    float: right;
+    text-align: right;
+}
+
+.shiptocontainer input, .namecontainer input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.namecontainer {
+    margin: 10px 0;
+    min-width: 235px;
+    overflow: hidden;
+    float: right;
+    padding-right: 0;
+    padding-left: 1em;
+}
+
+.modal-body .shiptocontainer input[type=text],
+.modal-body .namecontainer input[type=text] {
+  width: 11em!important;
+}
+
+.namecontainer input[type=text] {
+    font-size: 14px!important;
+}
+
+.nameinput {
+    padding-left: 1.7em;
+}
+.cityinput {
+    padding-left: 2.65em;
+}
+
+.zipinput {
+    padding-left: 0.15em;
+}
+
+.modal-footer table {
+    width: 99%;
+    margin: 15px auto 15px auto;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    font-size: 0.85em;
+}
+
+.modal-footer table thead {
+    background-color: #595959;
+    color: #fff;
+}
+
+.modal-footer table thead th {
+    padding: 7px;
+}
+
+.modal-footer table thead th:last-child,
+.modal-footer table tbody td:last-child {
+    text-align: center;
+}
+
+.modal-footer table tbody td {
+    text-align: left;
+    background-color: #FFF;
+    padding: 7px;
+}
+
+.modal-footer table tbody td:first-child {
+    width: 100px;
+}
+
+.modal-footer table tbody td:nth-child(3) {
+    width: 140px;
+}
+
+.modal-footer table tbody td:last-child {
+    width: 25px;
+}
+
+.modal-footer table td button {
+    margin: 0;
+}
+
+.leftvariantform, .rightvariantform {
+    font-size: 14px!important;
+}
+
+.variantResultList {
+    font-size: 12px!important;
+}
+
+.variant-container label {
+    font-size: 11px!important;
+}
+
+.variant-container .shiptoform {
+    font-size: 14px!important;
+}
+
+.shiptocontainer {
+    margin: 10px 0;
+    min-width: 235px;
+    overflow: hidden;
+    float: left;
+    /*padding-right: 2em;*/
+    padding-left: 0;
+    text-align: right!important;
+}
+.shiptocontainer div {
+    float: right;
+    text-align: right;
+}
+
+.shiptocontainer input, .namecontainer input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.namecontainer {
+    margin: 10px 0;
+    min-width: 235px;
+    overflow: hidden;
+    float: right;
+    padding-right: 0;
+    padding-left: 1em;
+}
+
+.modal-body .shiptocontainer input[type=text],
+.modal-body .namecontainer input[type=text] {
+  width: 11em!important;
+}
+
+.modal-form {
+    width: 100%;
+}
+
+.modal-form div {
+    width: 100%;
+    text-align: left;
+}
+
+.shiptocontainer div {
+    float: right;
+    text-align: right;
+}
+.shiptoform label, .nameform label {
+    font-size: 14px!important;
+}
+
+.action-button-container button {
+    font-size: 14px!important;
+}
+
+.variant-lookup-table th, .variant-lookup-table td {
+    font-size: 12px!important;
+}
+
+.modal-footer .col-xs-12 button {
+    font-size: 12px!important;
+}
+
+.modal-body .shiptocontainer input[type=text],
+.modal-body .namecontainer input[type=text] {
+  width: 11em!important;
+}
+
+.nameinput {
+    padding-left: 1.7em;
+}
+.cityinput {
+    padding-left: 2.65em;
+}
+
+.zipinput {
+    padding-left: 0.15em;
+}
+
+.action-button-container {
+    font-size: 14px!important;
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) {
     .search-field-modal {
         width: 50%;

@@ -1,7 +1,7 @@
 <div class="modal-header">
     <div ng-click="cancel()" class="close">X</div>
     <h3 class="modal-title">Share With Accounts</h3></div>
-<div class="modal-body" stop-event="touchend">
+<div class="modal-body variant-container" stop-event="touchend">
     <progress-bar ng-show="model.showProgress"></progress-bar>
     <div class="col-md-6 shiptocontainer desktop">
         <form class="modal-form shiptoform">
@@ -28,7 +28,7 @@
         <br>
     </div>
 </div>
-<div class="modal-footer">
+<div class="modal-footer variant-container">
     <div class="buttonwrapper"> </div>
     <div style="margin-top:20px" class="desktop top-wrapper">
         <pagination ng-change="shipPageChanged()" total-items="model.filteredList.length" ng-model="model.currentPage" items-per-page="model.pageSize" max-size="model.pagesToShow" boundary-links="true" class="pagination-group" ng-hide="model.filteredList.length<=0 || model.filteredList.length<=model.pageSize"></pagination>
