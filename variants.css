@@ -17,6 +17,40 @@
     color: rgba(51,122,183,0.5);
 }
 
+.b2b-inventory .variantWrapper .modal-title, .b2b-inventory .variantWrapper h3 {
+    background-color: white;
+    color: black;
+    font-size: 1.3em!important;
+    font-weight: 700!important;
+}
+
+.b2b-inventory .variantWrapper {
+    padding-bottom: 0!important;
+}
+
+.b2b-inventory .variantWrapper .share-search-title {
+    background-color: white;
+    color: black;
+    font-size: 1.7em!important;
+    font-weight: 700!important;
+}
+
+.b2b-inventory .close {
+    float: right;
+    font-size: 21px;
+    line-height: 1;
+    color: #000!important;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+    z-index:99999;
+}
+
 .variant-icon-disabled:hover {
     cursor: default!important;
 }
