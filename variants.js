@@ -25,7 +25,6 @@ angular.module('adidas.variants')
 
         $scope.init = function () {
           $scope.initialParams = angular.copy($scope.params);
-          console.log('IN THE INIT FOR VARIANTS ~~~~');
 
           $timeout(function () {
             if ($scope.loaddefault) {
@@ -952,7 +951,7 @@ angular.module('adidas.variants')
       var localData = 'bower_components/adidas.variants/variants.txt';
       var localAccounts = 'bower_components/adidas.variants/accountlist.txt';
       var MAGIC_URL = '/Magic94scripts/mgrqispi94.dll';
-      var serviceUrl = 'appname=Portal_SAP&prgname=NG_VARIANT_SERVICE';
+      var serviceUrl = 'appname=Portal_SAP'+ '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):top.GLBSID) +'&prgname=NG_VARIANT_SERVICE';
       var absURL = $location.absUrl();
       var localSaveSuccess = 'bower_components/adidas.variants/save_variant.txt';
 
@@ -1084,7 +1083,7 @@ angular.module('adidas.variants')
         },
         getAccountList: function (userId) {
           var deferred = $q.defer();
-          var params = 'appname=Portal_SAP&prgname=' + 'NG_OP_PARAM'+'&PROCESS_TYPE=A' + '&SAVEFILE=N&ACCOUNT=' + userId;
+          var params = 'appname=Portal_SAP'+ '&SESIONID='+ ($window.opener?($window.opener.top.GLBSID||top.GLBSID):top.GLBSID) +'&prgname=' + 'NG_OP_PARAM'+'&PROCESS_TYPE=A' + '&SAVEFILE=N&ACCOUNT=' + userId;
           console.log('userid in account list: ', userId);
           if (absURL.indexOf(':9000') === -1) {
             $http.post(MAGIC_URL, params)
